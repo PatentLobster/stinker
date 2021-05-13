@@ -13,6 +13,7 @@ export default createStore({
     project: '',
     project_path: '',
     active_processes: [],
+    user: null
   },
   mutations: {
     refreshSettings(state) {
