@@ -16,7 +16,7 @@
           </div>
           <div class="flex-shrink-0 flex pb-5">
             <a href="#" class="flex-shrink-0 w-full">
-              <img class="block mx-auto h-10 w-10 rounded-full" :src="user.imageUrl" alt="" />
+              <img class="block mx-auto h-10 w-10 rounded-full" :src="user.profileImage" alt="" />
               <div class="sr-only">
                 <p>
                   {{ user.name }}
@@ -33,18 +33,13 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { Dialog, DialogOverlay } from '@headlessui/vue'
 import { BookmarkAltIcon, FireIcon, HomeIcon, InboxIcon, MenuIcon, CogIcon, XIcon } from '@heroicons/vue/outline'
-
-const user = {
-  name: 'Emily Selman',
-  imageUrl:
-    'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-}
+import { useStore } from 'vuex'
 const navigation = [
   { name: 'Home', href: '/', icon: HomeIcon },
-  { name: 'Trending', href: '/null', icon: FireIcon },
+  { name: 'About', href: '/about', icon: FireIcon },
   { name: 'Bookmarks', href: '/m', icon: BookmarkAltIcon },
   { name: 'Messages', href: '/d', icon: InboxIcon },
   { name: 'Profile', href: '/preferences', icon: CogIcon },
@@ -60,9 +55,9 @@ export default {
   },
   setup() {
     const mobileMenuOpen = ref(false)
-
+    const store = useStore()
     return {
-      user,
+      user: computed(() => store.state.user),
       navigation,
       mobileMenuOpen,
     }

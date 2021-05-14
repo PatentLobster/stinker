@@ -1,27 +1,27 @@
 <template>
   <div class="home">
-    <Tinker />
-    <div class="flex flex-col flex-1">
-      <Editor class="flex-1" language="php-x" theme="one-light" v-model="code"></Editor>
-    </div>
-
+    <h1>
+      Hey {{user.name}}
+    </h1>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
-import Tinker from "../components/Tinker";
-import Editor from "../components/Editor";
-import "@/lib/tinker";
+// import platform_info from "../lib/platform_info";
+// const crypto = require('crypto');
+import { mapState } from "vuex";
+// import "@/lib/tinker";
 export default {
   name: 'Home',
   components: {
-    Tinker,
-    Editor
   },
   computed: {
-    code: ''
+      ...mapState(['user'])
+  },
+  methods: {
+
   }
 }
 </script>

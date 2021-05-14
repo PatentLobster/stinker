@@ -31,6 +31,7 @@
 import NavBar from "@/components/NavBar";
 
 export default {
+  name: 'app',
   components: {
      NavBar
   }
