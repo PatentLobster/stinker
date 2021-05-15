@@ -37,9 +37,9 @@
                 leave-from="opacity-100"
                 leave-to="opacity-0"
             >
-              <DialogOverlay class="fixed inset-0" />
+              <DialogOverlay class="fixed min-w-full inset-0" />
             </TransitionChild>
-            <span class="inline-block h-screen align-middle" aria-hidden="true">
+            <span class="inline-block h-screen  align-middle" aria-hidden="true">
             &#8203;
           </span>
 
@@ -67,12 +67,8 @@
                 >
                 Output:
                 </DialogTitle>
-                <div class="mt-2">
-                  <h6>{{ output }}</h6>
-                  {{kaki}}
-<!--                  <code class="text-sm text-gray-500" v-text="output">-->
-
-<!--                  </code>-->
+                <div class="mt-2 min-h-full">
+                  <Editor v-model="output" :value="output" style="height: 50vh" class="min-h-full" language="php-x" theme="one-light" />
                 </div>
               </div>
             </TransitionChild>
@@ -94,7 +90,7 @@ import { spawn } from "child_process";
 import { mapState } from 'vuex';
 // import "@/lib/tinker";
 export default {
-  name: 'Thinker',
+  name: 'Tinker',
   components: {
     // Tinker,
     Editor,
@@ -121,23 +117,18 @@ export default {
       if (this.$store.state.php_path !== "") {
         this.$store.commit('clear_output')
         this.isOpen = true
-        // this.$store.state.tinkering = true;
         console.log(this.dir)
         console.log(this.code)
         const tinker = spawn(this.$store.state.php_path, [`artisan`, "tinker"], { cwd: this.dir });
         tinker.stdout.setEncoding("utf-8");
-        // this.$store.state.output = "";
         tinker.stdout.on("data", (data) => {
           console.log(data.toString())
-         // this.kaki += data.toString();
           this.$store.state.tinkering = false;
         });
         tinker.stdin.write(this.code);
         tinker.stdout.on("data", (data) => {
           console.log(data.toString())
-          // this.kaki = data.toString()
           this.$store.commit('set_output', data)
-         // this.kaki += data.toString();
           this.$store.state.tinkering = false;
         });
         console.log(tinker)
@@ -153,7 +144,6 @@ export default {
       this.isOpen = true
     },
     setCode(e) {
-      console.log(e.target.value)
       this.$store.commit('set_code', e.target.value)
     }
   }

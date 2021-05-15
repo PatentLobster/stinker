@@ -5,7 +5,8 @@
         <div class="flex flex-col h-0 flex-1 overflow-y-auto bg-indigo-600">
           <div class="flex-1 flex flex-col">
             <div class="flex-shrink-0 bg-indigo-700 py-4 flex items-center justify-center">
-              <img class="h-8 w-auto" src="https://cdn.brainpop.com/assets/he/images/correct_state_moby_head.svg" alt="Workflow" />
+              <h1 class="font-gochi text-white leading-5 max-h-full text-5xl">z</h1>
+<!--              <img class="h-8 w-auto" src="https://cdn.brainpop.com/assets/he/images/correct_state_moby_head.svg" alt="Workflow" />-->
             </div>
             <nav aria-label="Sidebar" class="py-6 flex flex-col items-center space-y-3">
               <router-link v-for="item in navigation" :key="item.name" :to="item.href" exact-active-class="bg-indigo-800 hover:bg-indigo-800" class="flex items-center p-4 rounded-lg text-indigo-200 hover:bg-indigo-700">
@@ -68,13 +69,12 @@
 <script>
 import { computed, ref } from 'vue'
 import { Dialog, DialogOverlay, Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
-import { CodeIcon, TerminalIcon, HomeIcon, InboxIcon, MenuIcon, CogIcon, XIcon } from '@heroicons/vue/outline'
+import { CodeIcon, TerminalIcon, HomeIcon, MenuIcon, CogIcon, XIcon } from '@heroicons/vue/outline'
 import { useStore } from 'vuex'
 const navigation = [
   { name: 'Home', href: '/', icon: HomeIcon },
-  { name: 'About', href: '/about', icon: TerminalIcon },
+  { name: 'Tinker', href: '/Tinker', icon: TerminalIcon },
   { name: 'Snippets', href: '/snippets', icon: CodeIcon },
-  { name: 'Messages', href: '/d', icon: InboxIcon },
   { name: 'Profile', href: '/preferences', icon: CogIcon },
 ]
 

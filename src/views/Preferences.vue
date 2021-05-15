@@ -42,6 +42,13 @@
                              @change="handleFileChange"
                       />
                     </label>
+
+                    <button
+                        @click="autodetectPHP"
+                        class="inline-flex items-center px-3 ml-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                    >
+                      autodetect
+                    </button>
                   </div>
                  <div class="sm:col-span-6 py-3">
                     <label for="dir" class="inline-block text-sm font-medium text-blue-gray-900">
@@ -88,6 +95,7 @@
 import { mapState } from "vuex";
 import Store from "electron-store";
 const settings = new Store();
+import platformInfo from "../lib/platform_info";
 
 export default {
   name: "Preferences",
@@ -104,6 +112,14 @@ export default {
     flushSettings() {
       settings.clear()
       this.$store.commit('refreshSettings')
+    },
+    autodetectPHP() {
+      console.log(platformInfo.which_php)
+      if (!settings.get("php_path") && platformInfo.which_php) {
+        this.$store.commit('set_php_path', platformInfo.which_php)
+      } else {
+        alert("Couldn't find PHP binary please select it manually")
+      }
     }
 
 

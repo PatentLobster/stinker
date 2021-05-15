@@ -1,9 +1,46 @@
 import * as path from 'path'
 import * as electron from 'electron'
 const iniparser = require('iniparser');
-// import   Store from "electron-store";
-// const which = require('which')
-// const settings = new Store();
+import { sync } from "execa";
+import stripAnsi from "strip-ansi";
+const defaultShell = process.env.SHELL || "/bin/bash";
+
+const args = ["-ilc", 'echo -n "_SHELL_ENV_DELIMITER_"; env; echo -n "_SHELL_ENV_DELIMITER_"; exit'];
+const env = {
+  // Disables Oh My Zsh auto-update thing that can block the process.
+  DISABLE_AUTO_UPDATE: "true"
+};
+const parseEnv = (env) => {
+  env = env.split("_SHELL_ENV_DELIMITER_")[1];
+  const ret = {};
+
+  for (const line of stripAnsi(env)
+    .split("\n")
+    .filter((line) => Boolean(line))) {
+    const [key, ...values] = line.split("=");
+    ret[key] = values.join("=");
+  }
+
+  return ret;
+};
+
+const shellEnv = () => {
+  try {
+    const { stdout } = sync(defaultShell, args, { env });
+    return parseEnv(stdout);
+  } catch (error) {
+    return process.env;
+  }
+}
+
+const which_php = () => {
+  try {
+    const { stdout } = sync('which', ['php'], );
+    return stdout;
+  } catch (error) {
+    return process.env;
+  }
+}
 
 import * as electronRemote from '@electron/remote'
 const e = electronRemote ? electronRemote : electron
@@ -18,13 +55,6 @@ let windowPrefersDarkMode = false
 if (electron.remote) {
     windowPrefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
 }
-// let which_php = settings.get('php_path')
-// if (!isWindows && !which_php) {
-//     which_php = which.sync = ('php')
-//     settings.set('php_path', which_php)
-// }
-// const which_php = which.sync('node')
-
 
 const updatesDisabled = !!p.env.BEEKEEPER_DISABLE_UPDATES
 
@@ -60,7 +90,8 @@ const platformInfo = {
     appDbPath: path.join(userDirectory, isDevEnv ? 'app-dev.db' : 'app.db'),
     lowDbPath: path.join(userDirectory, isDevEnv ? 'snippets-dev.json' : 'snippets.json'),
 
-    // which_php,
+    which_php: which_php(),
+    shellEnv: shellEnv(),
 
     updatesDisabled,
     appVersion: testMode ? 'test-mode' : e.app.getVersion(),

@@ -3,3 +3,15 @@
 @tailwind components;
 
 @tailwind utilities;
+  @font-face {
+    font-family: Gochi Hand;
+    font-weight: 400;
+    src: url('GochiHand-Regular.ttf') format("ttf");
+  }
+
+@layer base {
+  @font-face {
+    font-family: Gochi Hand;
+    src: url('GochiHand-Regular.ttf');
+  }
+}
