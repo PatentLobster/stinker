@@ -1,11 +1,15 @@
 import * as path from 'path'
 import * as electron from 'electron'
 const iniparser = require('iniparser');
+// import   Store from "electron-store";
+// const which = require('which')
+// const settings = new Store();
+
 import * as electronRemote from '@electron/remote'
 const e = electronRemote ? electronRemote : electron
 const p = electronRemote ? electronRemote.process : process
 const platform = p.env.OS_OVERRIDE ? p.env.OS_OVERRIDE : p.platform
-const testMode = p.env.TEST_MODE ? true : false
+const testMode = !!p.env.TEST_MODE
 const isDevEnv = !(e.app && e.app.isPackaged);
 const isWindows = platform === 'win32'
 const isMac = platform === 'darwin'
@@ -14,6 +18,14 @@ let windowPrefersDarkMode = false
 if (electron.remote) {
     windowPrefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
 }
+// let which_php = settings.get('php_path')
+// if (!isWindows && !which_php) {
+//     which_php = which.sync = ('php')
+//     settings.set('php_path', which_php)
+// }
+// const which_php = which.sync('node')
+
+
 const updatesDisabled = !!p.env.BEEKEEPER_DISABLE_UPDATES
 
 let userDirectory =  testMode ? './tmp' : e.app.getPath("userData")
@@ -46,6 +58,10 @@ const platformInfo = {
     homeDirectory,
     testMode,
     appDbPath: path.join(userDirectory, isDevEnv ? 'app-dev.db' : 'app.db'),
+    lowDbPath: path.join(userDirectory, isDevEnv ? 'snippets-dev.json' : 'snippets.json'),
+
+    // which_php,
+
     updatesDisabled,
     appVersion: testMode ? 'test-mode' : e.app.getVersion(),
     gitUser: gitUser ? gitUser.user : null

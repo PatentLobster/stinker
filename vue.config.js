@@ -1,16 +1,16 @@
-const externals = ['better-sqlite3']
-const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
+const externals = ['better-sqlite3', 'monaco-editor']
+// const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
 module.exports = {
   pluginOptions: {
-      configureWebpack: {
-          plugins: [
-              new MonacoWebpackPlugin({
-                  features: ["!codelens", "!fontZoom", "!iPadShowKeyboard", "!snippets"],
-                  languages: []
-              })
-          ]
-      },
+      // configureWebpack: {
+      //     plugins: [
+      //         new MonacoWebpackPlugin({
+      //             features: ["!codelens", "!fontZoom", "!iPadShowKeyboard", "!snippets"],
+      //             languages: []
+      //         })
+      //     ]
+      // },
     electronBuilder: {
         externals,
         nodeIntegration: true,

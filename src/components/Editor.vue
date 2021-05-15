@@ -3,8 +3,8 @@
     thanks egoist
     https://github.com/egoist/vue-monaco/blob/master/src/MonacoEditor.js
 */
-import { h } from 'vue'
-
+// import { h } from 'vue'
+require('../lib/tinker')
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 export default {
   name: "TinkerEditor",
@@ -68,6 +68,7 @@ export default {
           fontSize: "18px",
           minimap: { enabled: false },
           lineHeight: 18,
+          padding: {top: '5rem'},
           // fontFamily: "RobotoMono"
         },
         this.options
@@ -93,17 +94,17 @@ export default {
       this.editor.focus();
     },
     resize() {
-      this.editor.layout({ width: this.$el.offsetWidth, height: this.$el.offsetHeight });
+      // this.editor.layout({ width: this.$el.offsetWidth, height: this.$el.offsetHeight });
     }
   },
-  render() {
-    return h("div");
-  }
+  // render() {
+  //   return h("div");
+  // }
 };
 </script>
 
-<!--<template>-->
-<!--  <div/>-->
-<!--</template>-->
+<template>
+  <div/>
+</template>
 
 <style></style>
