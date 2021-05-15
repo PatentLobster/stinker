@@ -1,24 +1,25 @@
 <template>
-  <div class="home ">
-<!--    <Tinker />-->
+  <div class="interpreter">
     <div class="flex-grow flex-col  min-h-full">
       <Editor class="flex-col min-w-screen min-h-screen" language="php-x" theme="one-light" :value="code" @input="setCode" v-model="code"></Editor>
     </div>
-    <div class="absolute flex bottom-0 p-2 pb-6 min-w-full h-4 bg-gray-500">
+    <div class="absolute flex-grow bottom-0 pt-3 pb-7 min-w-full h-4 bg-blue-50 border shadow shadow-lg  divide-x">
+      <div class="relative flex max-h-4 bottom-1 mt-1">
         <button type="button"
-                @click="openModal"
-                class="ml-auto mr-2  inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-6 font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                @click="saveSnippet"
+                class=" ml-auto mr-3 inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-6 font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
           Save
           <SaveIcon class="ml-2 -mr-0.5 h-4 w-4" aria-hidden="true" />
         </button>
 
-      <button type="button"
-              @click="executeTinker"
-              class="mr-auto inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-6 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-      >
-        Execute
-        <LightningBoltIcon class="ml-2 -mr-0.5 h-4 w-4" aria-hidden="true" />
-      </button>
+        <button type="button"
+                @click="executeTinker"
+                class="mr-24 inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-6 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+        >
+          Execute
+          <LightningBoltIcon class="ml-2 -mr-0.5 h-4 w-4" aria-hidden="true" />
+        </button>
+      </div>
     </div>
 
 
@@ -145,6 +146,9 @@ export default {
     },
     setCode(e) {
       this.$store.commit('set_code', e.target.value)
+    },
+    saveSnippet() {
+      this.$store.dispatch('add_snippet',this.code)
     }
   }
 }

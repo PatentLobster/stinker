@@ -4,6 +4,7 @@ import platformInfo from "../lib/platform_info";
 import Store from "electron-store";
 import * as path from "path";
 const settings = new Store();
+import db from "../lib/nosql"
 
 export default createStore({
     state: {
@@ -34,6 +35,7 @@ export default createStore({
           }
           state.user = settings.get("user");
           state.dir  = settings.get("dir");
+          state.snippets = db.get('snippets').value()
       },
       set_php_path(state, payload) {
           settings.set(`php_path`, payload)
@@ -52,10 +54,24 @@ export default createStore({
       },
       clear_output(state) {
            state.output = ''
+      },
+      refresh_snippets(state) {
+           state.snippets = db.get('snippets').value()
       }
+
 
   },
   actions:{
+      add_snippet({commit}, payload) {
+          db.get('snippets')
+              .push({ code: payload, time:new Date()})
+              .write()
+
+          // Increment count
+          db.update('count', n => n + 1)
+              .write()
+          commit('refresh_snippets')
+      }
   },
   modules: {
   }

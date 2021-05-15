@@ -4,7 +4,7 @@
       <div class="px-8 py-8 sm:px-6 divide-y divide-dotted">
         <div>
           <h1 class="text-4xl font-bold">
-            Hey <span class="font-gochi"> {{user.name}}. </span>
+            Hey <span class="font-gochi"> {{user.name}} </span>
           </h1>
         </div>
         <div class="pt-4">
@@ -12,7 +12,7 @@
             To get started make sure to select laravel project and php path in the
             <router-link
                 to="/preferences"
-                class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                class="inline-flex items-center px-1 py-0.5 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
               app preferences.
             </router-link>
           </p>
@@ -23,12 +23,7 @@
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
-// import platform_info from "../lib/platform_info";
-// const crypto = require('crypto');
 import { mapState } from "vuex";
-// import "@/lib/tinker";
 export default {
   name: 'Home',
   components: {
