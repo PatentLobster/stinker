@@ -2,16 +2,18 @@
 
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+import installExtension /*{ VUEJS_DEVTOOLS }*/ from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 require('@electron/remote/main').initialize()
+const Store = require('electron-store');
+Store.initRenderer()
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
-async function createWindow() {
+ async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 800,
@@ -30,9 +32,9 @@ async function createWindow() {
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
     // if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
-    createProtocol('app')
+    await createProtocol('app')
     // Load the index.html when not in development
-    win.loadURL('app://./index.html')
+    await win.loadURL('app://./index.html')
   }
 }
 
@@ -45,10 +47,10 @@ app.on('window-all-closed', () => {
   }
 })
 
-app.on('activate', () => {
+app.on('activate', async() => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  if (BrowserWindow.getAllWindows().length === 0) await createWindow()
 })
 
 // This method will be called when Electron has finished
@@ -58,12 +60,16 @@ app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
-      await  installExtension(VUEJS_DEVTOOLS)
+      await  installExtension({
+        id: 'ljjemllljcmogpfapbkkighbhhppjdbg', //Vue Devtools beta
+        electron: '>=1.2.1'
+      })
+      // await  installExtension(VUEJS_DEVTOOLS)
     } catch (e) {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }
-  createWindow()
+  await createWindow()
 })
 
 // Exit cleanly on request from parent process in development mode.
