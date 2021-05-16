@@ -1,12 +1,14 @@
 <template>
- <!-- Static sidebar for desktop -->
     <div class="flex flex-shrink-0">
       <div class="flex flex-col w-20">
         <div class="flex flex-col h-0 flex-1 overflow-y-auto bg-gray-800">
+
           <div class="flex-1 flex flex-col">
-            <div class="flex-shrink-0 bg-indigo-700 py-4 flex items-center justify-center">
-              <h1 class="font-gochi text-white leading-5 max-h-full text-5xl">z</h1>
-<!--              <img class="h-8 w-auto" src="https://cdn.brainpop.com/assets/he/images/correct_state_moby_head.svg" alt="Workflow" />-->
+            <div class="flex-shrink-0 bg-indigo-700 py-4 flex items-center  shadow justify-center">
+              <h1
+                  class="font-gochi text-white leading-5 max-h-full text-5xl">
+                z
+              </h1>
             </div>
             <nav aria-label="Sidebar" class="py-6 flex flex-col items-center space-y-3">
               <router-link v-for="item in navigation" :key="item.name" :to="item.href" exact-active-class="bg-gray-900 text-white hover:bg-gray-700" class="flex items-center p-4 rounded-lg text-gray-200 hover:bg-gray-700  text-base font-medium focus:ring-2 focus:ring-indigo-600">
@@ -15,9 +17,9 @@
               </router-link>
             </nav>
           </div>
-            <Popover class="flex-shrink-0 flex pb-5 mx-auto">
-              <PopoverButton class="block" ><img class="block mx-auto h-10 w-10 rounded-full" :src="user.profileImage" alt="" /></PopoverButton>
 
+          <Popover class="flex-shrink-0 flex pb-5 mx-auto">
+            <PopoverButton class="block" ><img class="block mx-auto h-10 w-10 rounded-full" :src="user.profileImage" alt="" /></PopoverButton>
               <PopoverOverlay
                   class="bg-black"
                   :class='open ? "opacity-30 fixed inset-0" : "opacity-0"'
@@ -33,19 +35,17 @@
 
               <PopoverPanel
                         class="absolute z-10 w-screen max-w-md mt-4 transform  -translate-y-32  left-1/8 sm:px-0 lg:max-w-3xl">
-                <div
-                    class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black bg-white ring-opacity-5">
-                              <div class="relative grid grid-cols-1 gap-8 bg-white">
-<!--                                <div-->
-<!--                                    class="flex self-center justify-center bg-white flex-shrink-0 w-10 h-10 xl:text-gray-800 sm:h-12 sm:w-12"-->
-<!--                                >-->
-                                <div class="ml-3 mr-3 p-3 overflow-guard">
-                                  <p class="inline">Email {{ user.email }}</p>
-                                </div>
+                  <div
+                    class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black bg-white ring-opacity-5"
+                  >
 
-                              </div>
+                      <div class="relative grid grid-cols-1 gap-8 bg-white">
+                        <div class="ml-3 mr-3 p-3 overflow-guard">
+                          <p class="inline">Email {{ user.email }}</p>
+                        </div>
+                      </div>
+
                 </div>
-
               </PopoverPanel>
               </transition>
             </Popover>
@@ -60,7 +60,6 @@
                 </p>
               </div>
             </a>
-<!--          </div>-->
         </div>
       </div>
     </div>
