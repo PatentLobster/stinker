@@ -36,15 +36,17 @@
               <PopoverPanel
                         class="absolute z-10 w-screen max-w-md mt-4 transform  -translate-y-32  left-1/8 sm:px-0 lg:max-w-3xl">
                   <div
-                    class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black bg-white ring-opacity-5"
+                    class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black bg-white ring-opacity-5 text-center"
                   >
-
-                      <div class="relative grid grid-cols-1 gap-8 bg-white">
+                      <div class="relative  grid grid-cols-1 bg-white">
                         <div class="ml-3 mr-3 p-3 overflow-guard">
-                          <p class="inline">Email {{ user.email }}</p>
+                          <p class="inline">Hey {{ user.name }}</p>
+                        </div>
+
+                        <div class="ml-3 mr-3 p-3 overflow-guard">
+                          <p class="inline">This is a useless menu 💩</p>
                         </div>
                       </div>
-
                 </div>
               </PopoverPanel>
               </transition>

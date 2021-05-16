@@ -1,4 +1,3 @@
-<!-- This example requires Tailwind CSS v2.0+ -->
 <template>
   <div class="h-screen flex bg-gray-50 overflow-hidden">
 

@@ -38,7 +38,7 @@
                 leave-from="opacity-100"
                 leave-to="opacity-0"
             >
-              <DialogOverlay class="fixed min-w-full inset-0" />
+              <DialogOverlay class="fixed min-w-screen inset-0" />
             </TransitionChild>
             <span class="inline-block h-screen  align-middle" aria-hidden="true">
             &#8203;
@@ -54,7 +54,7 @@
                 leave-to="opacity-0 scale-95"
             >
               <div
-                  class="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
+                  class="inline-block min-w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl"
               >
                 <div class="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
                   <button type="button" class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" @click="isOpen = false">

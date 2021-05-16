@@ -20,7 +20,7 @@ module.exports = {
         builderOptions: {
             appId: "io.itzik.brain.kit",
             productName: "Brain kit",
-            files: ['**/*', 'public/icons/**/*'],
+            files: ['**/*', 'build/icons/**/*'],
             extraResources: [
                 {
                     from: './public',
