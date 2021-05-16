@@ -12,7 +12,7 @@
             class="grid-cols-1 flex justify-center"
         >
           <code
-              class="p-5 m-4 w-1/2 shadow bg-white rounded"
+              class="p-5 m-4 w-1/2 shadow bg-white rounded whitespace-pre"
               v-html="snippet.code"
               :v-model="snippet.code"
           />

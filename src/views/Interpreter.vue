@@ -81,19 +81,15 @@
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
-// import Tinker from "../components/Tinker";
+
 import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { SaveIcon, LightningBoltIcon, XIcon  } from '@heroicons/vue/outline'
 import Editor from "../components/Editor";
 import { spawn } from "child_process";
 import { mapState } from 'vuex';
-// import "@/lib/tinker";
 export default {
   name: 'Tinker',
   components: {
-    // Tinker,
     Editor,
     SaveIcon,
     LightningBoltIcon,
