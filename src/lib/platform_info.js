@@ -64,7 +64,7 @@ const homeDirectory = testMode ? './tmp' : e.app.getPath('home')
 const gitConfPath = path.join(e.app.getPath('home'), '/.gitconfig')
 const gitUser = iniparser.parseSync(gitConfPath);
 if (p.env.PORTABLE_EXECUTABLE_DIR) {
-    userDirectory = path.join(p.env.PORTABLE_EXECUTABLE_DIR, 'beekeeper_studio_data')
+    userDirectory = path.join(p.env.PORTABLE_EXECUTABLE_DIR, 'stinker_beta')
 }
 const platformInfo = {
     isWindows, isMac,

@@ -114,13 +114,10 @@ export default {
       if (this.$store.state.php_path !== "") {
         this.$store.commit('clear_output')
         this.isOpen = true
-        console.log(this.dir)
-        console.log(this.code)
         const tinker = spawn(this.$store.state.php_path, [`artisan`, "tinker"], { cwd: this.dir });
         tinker.stdout.setEncoding("utf-8");
         tinker.stdin.write(this.code);
         tinker.stdout.on("data", (data) => {
-          console.log(data.toString())
           this.$store.commit('set_output', data)
           this.$store.state.tinkering = false;
         });

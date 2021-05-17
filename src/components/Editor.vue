@@ -4,7 +4,7 @@
     https://github.com/egoist/vue-monaco/blob/master/src/MonacoEditor.js
 */
 // import { h } from 'vue'
-require('../lib/tinker')
+require('../lib/php_x')
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 export default {
   name: "TinkerEditor",
