@@ -1,4 +1,4 @@
-# brain-kit
+# Stinker
 Laravel tinker snippet app.
 
 ![screenshot](public/screenshot.png?raw=true "Screenshot")
