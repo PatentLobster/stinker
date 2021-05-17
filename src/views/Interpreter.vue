@@ -118,17 +118,12 @@ export default {
         console.log(this.code)
         const tinker = spawn(this.$store.state.php_path, [`artisan`, "tinker"], { cwd: this.dir });
         tinker.stdout.setEncoding("utf-8");
-        tinker.stdout.on("data", (data) => {
-          console.log(data.toString())
-          this.$store.state.tinkering = false;
-        });
         tinker.stdin.write(this.code);
         tinker.stdout.on("data", (data) => {
           console.log(data.toString())
           this.$store.commit('set_output', data)
           this.$store.state.tinkering = false;
         });
-        console.log(tinker)
         tinker.stdin.end();
       } else {
         console.log("Error", "php executable not found.\r\nGo to Settings and choose an executable.");
