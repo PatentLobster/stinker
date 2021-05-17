@@ -1,7 +1,7 @@
 # Stinker
 Laravel tinker snippet app.
 
-![screenshot](public/screenshot.png?raw=true "Screenshot")
+![screenshot](.github/images/screenshot.png?raw=true "Screenshot")
 
 
 ## Project setup
@@ -11,12 +11,12 @@ yarn install
 
 ### Compiles and hot-reloads for development
 ```
-yarn serve::electron
+yarn serve:electron
 ```
 
 ### Compiles and minifies for production
 ```
-yarn build::electron
+yarn build:electron
 ```
 
 ### Lints and fixes files
@@ -30,3 +30,5 @@ yarn lint
 - Vue [Configuration Reference](https://cli.vuejs.org/config/).
 - Monaco Editor [Wiki](https://microsoft.github.io/monaco-editor/)
 - Lowdb [Git](https://github.com/typicode/lowdb)
+- [Tailwindcss](https://tailwindcss.com/)
+- [Headless UI](https://headlessui.dev/)
