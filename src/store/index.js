@@ -32,7 +32,7 @@ export default createStore({
               const user = platformInfo.gitUser
               settings.set('user.email', user.email)
               settings.set('user.name', user.name)
-              settings.set('user.profileImage', `http://www.gravatar.com/avatar/${crypto.createHash('md5').update('user.email').digest("hex")}?s=32`)
+              settings.set('user.profileImage', `http://www.gravatar.com/avatar/${crypto.createHash('md5').update('user.email').digest('hex').toString()}?s=32`)
           }
           state.user = settings.get("user");
           state.dir  = settings.get("dir");

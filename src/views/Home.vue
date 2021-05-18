@@ -10,6 +10,7 @@
         <div class="pt-4">
           <p>
             To get started make sure to select laravel project and php path in the
+
             <router-link
                 to="/preferences"
                 class="inline-flex items-center px-1 py-0.5 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
@@ -33,6 +34,6 @@ export default {
   },
   methods: {
 
-  }
+  },
 }
 </script>

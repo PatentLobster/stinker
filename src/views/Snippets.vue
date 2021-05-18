@@ -1,10 +1,6 @@
 <template>
   <div class="overflow-y-auto">
-<!--    <h1 class="text-2xl" v-text="dbPath">-->
-<!--    </h1>-->
-
-
-    <div class=" divide-y">
+    <div class=" divide-y" v-if="snippets.count > 0">
       <div class="sr-only">
         You got: {{snippets_count}} snippets.
       </div>
@@ -16,11 +12,9 @@
         <div
             class="grid-cols-1 flex justify-center"
         >
-          <code
-              class="p-5 m-4 min-w-1/2 shadow bg-white rounded ml-auto whitespace-pre"
-              v-html="snippet.code"
-              :v-model="snippet.code"
-          />
+          <CodeBlock>
+            {{snippet.code}}
+          </CodeBlock>
           <div class="relative ml-auto mr-2 mt-3 ">
             <button
                 @click="delete_snippet(snippet)"
@@ -46,6 +40,27 @@
           </div>
         </div>
       </div>
+      </div>
+    <div
+        v-else
+        class="flex justify-center w-full justify-self-center my-3"
+    >
+      <div
+          class="grid text-center justify-center w-3/4 bg-white shadow drop-shadow-md rounded-2xl border border-blue"
+      >
+        <h1
+            class="align-middle block my-2 text-lg font-bold"
+        >
+          Wow, such empty.
+        </h1>
+        <img src="@/assets/doge.png"
+             alt="Doge"
+             class="block h-32 w-32 my-2 justify-self-center"
+        >
+        <p class="leading-1 mb-3">
+          Stinks, no snippets found.
+        </p>
+      </div>
     </div>
 
   </div>
@@ -53,15 +68,16 @@
 
 <script>
 
-//import platformInfo from "../lib/platform_info";
 import {TrashIcon, LightningBoltIcon}  from '@heroicons/vue/outline'
 import { mapState } from "vuex";
+import CodeBlock from "../components/CodeBlock";
 export default {
 
   name: "Snippets",
   components: {
     TrashIcon,
-    LightningBoltIcon
+    LightningBoltIcon,
+    CodeBlock
   },
   computed: {
     ...mapState([`snippets`, `snippets_count`]),
@@ -73,7 +89,8 @@ export default {
     execute_snippet(code) {
       this.$store.commit('set_code', code)
       this.$router.push('/tinker')
-    }
+    },
+
   }
 
 
