@@ -1,6 +1,6 @@
 <template>
   <div class="overflow-y-auto">
-    <div class=" divide-y" v-if="snippets.count > 0">
+    <div class=" divide-y" v-if="snippets_count > 0">
       <div class="sr-only">
         You got: {{snippets_count}} snippets.
       </div>
