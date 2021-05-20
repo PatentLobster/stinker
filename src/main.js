@@ -5,4 +5,4 @@ import store from './store/index'
 import './assets/tailwind.css'
 
 const vApp = createApp(App).use(store).use(router).mount('#app')
-vApp.$store.commit('refreshSettings')
+vApp.$store.dispatch('refresh_settings')

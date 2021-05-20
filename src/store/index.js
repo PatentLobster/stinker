@@ -5,7 +5,7 @@ import * as path from "path";
 const settings = new Store();
 import db from "../lib/nosql"
 const crypto = require('crypto')
-
+const {sync} = require('execa');
 export default createStore({
     state: {
     php_path: '',
@@ -23,22 +23,10 @@ export default createStore({
       name: '',
       email: '',
       profileImage: ''
-    }
+    },
+    commands: {}
   },
   mutations: {
-       refreshSettings(state) {
-          state.php_path = settings.get("php_path");
-          if (!settings.get("user")) {
-              const user = platformInfo.gitUser
-              settings.set('user.email', user.email)
-              settings.set('user.name', user.name)
-              settings.set('user.profileImage', `http://www.gravatar.com/avatar/${crypto.createHash('md5').update('user.email').digest('hex').toString()}?s=32`)
-          }
-          state.user = settings.get("user");
-          state.dir  = settings.get("dir");
-          state.snippets = db.get('snippets').value()
-          state.snippets_count = db.get('count').value()
-      },
       set_php_path(state, payload) {
           settings.set(`php_path`, payload)
           state.php_path = payload
@@ -65,6 +53,12 @@ export default createStore({
       },
       decrement_snippets(state) {
           state.snippets_count--
+      },
+      set_commands(state) {
+          let {stdout} = sync(state.php_path, ['artisan', '--format=json' ], {cwd: state.dir})
+          stdout = JSON.parse(stdout)
+          state.commands = stdout.commands
+          settings.set('commands', stdout.commands)
       }
   },
   actions:{
@@ -88,6 +82,33 @@ export default createStore({
 
           commit('refresh_snippets')
           commit('decrement_snippets') // Either Im stupid or vue is. 💩
+      },
+      refresh_settings({commit, state}) {
+          state.php_path = settings.get("php_path");
+          if (!settings.get("user")) {
+              const user = platformInfo.gitUser
+              settings.set('user.email', user.email)
+              settings.set('user.name', user.name)
+              settings.set('user.profileImage', `http://www.gravatar.com/avatar/${crypto.createHash('md5').update(user.email).digest('hex').toString()}?s=32`)
+          }
+
+          state.user = settings.get("user");
+          state.dir  = settings.get("dir");
+          state.snippets = db.get('snippets').value()
+          state.snippets_count = db.get('count').value()
+
+          if (settings.get('project')) {
+              state.project = settings.get('project')
+              if (settings.get('commands')) {
+                  state.commands = settings.get('commands')
+              } else {
+                commit('set_commands')
+              }
+          }
+      },
+      open_project({commit}, payload) {
+          commit('set_dir', payload)
+          commit('set_commands')
       }
   },
   modules: {

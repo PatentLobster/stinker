@@ -59,9 +59,10 @@
                     <label class="w-32 inline-flex flex-col items-center  bg-indigo-500 text-white rounded-lg shadow-lg tracking-wide border border-blue cursor-pointer ">
                       <span class="p-1 text-sm">Select a folder</span>
                       <input type='file' class="hidden" id="dir"
-                             @change="handleFileChange"
+                             @change="openProject"
                       />
                     </label>
+
                   </div>
 
                  <div class="sm:col-span-6 mt-4 py-5">
@@ -96,12 +97,15 @@ export default {
   },
   methods: {
 
+    openProject(e) {
+      this.$store.dispatch('open_project',  e.target.files[0].path)
+    },
     handleFileChange(e) {
       this.$store.commit(`set_${e.target.id}`, e.target.files[0].path)
     },
     flushSettings() {
       settings.clear()
-      this.$store.commit('refreshSettings')
+      this.$store.dispatch('refresh_settings')
     },
     autodetectPHP() {
       console.log(platformInfo.which_php)

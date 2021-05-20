@@ -1,4 +1,4 @@
-const externals = ['better-sqlite3', 'monaco-editor']
+const externals = ['monaco-editor']
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
 module.exports = {
