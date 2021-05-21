@@ -76,7 +76,7 @@ const navigation = [
   { name: 'Home', href: '/', icon: HomeIcon },
   { name: 'Tinker', href: '/Tinker', icon: SparklesIcon },
   { name: 'Snippets', href: '/snippets', icon: CodeIcon },
-  { name: 'Tools', href: '/tools', icon: TerminalIcon },
+  { name: 'Tools', href: '/commands', icon: TerminalIcon },
   { name: 'Profile', href: '/preferences', icon: CogIcon },
 ]
 
