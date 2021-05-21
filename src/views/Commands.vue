@@ -131,7 +131,7 @@
                 >
                   Output:
                 </DialogTitle>
-                <div class="rounded-md bg-red-50 p-4">
+                <div class="rounded-md bg-red-50 p-4" v-if="isError">
                   <div class="flex">
                     <div class="flex-shrink-0">
                       <img
