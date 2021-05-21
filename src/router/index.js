@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router
 import Home from '../views/Home.vue'
 import Preferences from "../views/Preferences";
 import Snippets from "../views/Snippets";
+import Tools from "../views/Commands";
 const routes = [
   {
     path: '/',
@@ -25,7 +26,12 @@ const routes = [
     path: '/snippets',
     name: 'Snippets',
     component: Snippets
-  }
+  },
+  {
+    path: '/commands',
+    name: 'Commands',
+    component: Tools
+  },
 ]
 
 const router = createRouter({

@@ -70,12 +70,13 @@
 <script>
 import { computed, ref } from 'vue'
 import { Dialog, DialogOverlay, Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
-import { CodeIcon, TerminalIcon, HomeIcon, MenuIcon, CogIcon, XIcon } from '@heroicons/vue/outline'
+import { CodeIcon, TerminalIcon, HomeIcon, MenuIcon, CogIcon, SparklesIcon, XIcon } from '@heroicons/vue/outline'
 import { useStore } from 'vuex'
 const navigation = [
   { name: 'Home', href: '/', icon: HomeIcon },
-  { name: 'Tinker', href: '/Tinker', icon: TerminalIcon },
+  { name: 'Tinker', href: '/Tinker', icon: SparklesIcon },
   { name: 'Snippets', href: '/snippets', icon: CodeIcon },
+  { name: 'Tools', href: '/tools', icon: TerminalIcon },
   { name: 'Profile', href: '/preferences', icon: CogIcon },
 ]
 
@@ -86,6 +87,7 @@ export default {
     DialogOverlay,
     MenuIcon,
     XIcon,
+    SparklesIcon,
     Popover,
     PopoverButton,
     PopoverPanel

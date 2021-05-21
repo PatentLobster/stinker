@@ -24,7 +24,8 @@ export default createStore({
       email: '',
       profileImage: ''
     },
-    commands: {}
+    commands: {},
+    sorted_commands: [],
   },
   mutations: {
       set_php_path(state, payload) {
@@ -59,6 +60,17 @@ export default createStore({
           stdout = JSON.parse(stdout)
           state.commands = stdout.commands
           settings.set('commands', stdout.commands)
+          state.sorted_commands =  stdout.commands.reduce(
+          (result, comm) => {
+            console.log(comm);
+            const i = comm.name[0].toUpperCase();
+            (result[i]) ? result[i].push(comm) : result[i] = [comm];
+            return {
+              ...result,
+            };
+          },
+          {}
+      );
       }
   },
   actions:{
@@ -97,7 +109,7 @@ export default createStore({
           state.snippets = db.get('snippets').value()
           state.snippets_count = db.get('count').value()
 
-          if (settings.get('project')) {
+          if (state.dir && state.php_path) {
               state.project = settings.get('project')
               if (settings.get('commands')) {
                   state.commands = settings.get('commands')
@@ -109,7 +121,7 @@ export default createStore({
       open_project({commit}, payload) {
           commit('set_dir', payload)
           commit('set_commands')
-      }
+      },
   },
   modules: {
   }
