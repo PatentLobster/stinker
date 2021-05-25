@@ -9,6 +9,7 @@ const {sync} = require('execa');
 export default createStore({
     state: {
     php_path: '',
+    arg_code: '',
     code: '',
     output: '',
     snippets: [],
@@ -18,7 +19,7 @@ export default createStore({
     project_path: '',
     dir: '',
     tinkering: false,
-    active_processes: [],
+    active_processes: {},
     user: {
       name: '',
       email: '',
@@ -62,7 +63,6 @@ export default createStore({
           settings.set('commands', stdout.commands)
           state.sorted_commands =  stdout.commands.reduce(
           (result, comm) => {
-            console.log(comm);
             const i = comm.name[0].toUpperCase();
             (result[i]) ? result[i].push(comm) : result[i] = [comm];
             return {
@@ -71,6 +71,9 @@ export default createStore({
           },
           {}
       );
+      },
+      set_argv(state, payload) {
+          state.arg_code = `$obj = unserialize(base64_decode('${payload}'));`;
       }
   },
   actions:{

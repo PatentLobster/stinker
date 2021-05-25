@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="h-screen max-h-full overflow-guard flex" v-if="php_path && dir ">
-    <aside class=" xl:order-first xl:flex xl:flex-col flex-shrink-0 w-96 border-r border-gray-200">
+    <aside class="order-first flex flex-col flex-shrink-0 w-64 border-r border-gray-200">
       <div class="px-6 pt-6 pb-4">
         <h2 class="text-lg font-medium text-gray-900">Commands</h2>
 <!--        TODO: add search -->
@@ -53,7 +53,7 @@
     </aside>
 
     <div
-        class="w-1/2 justify-self-center bg-white my-5 p-5 rounded-2xl shadow drop-shadow-md border"
+        class="w-full mx-3  justify-self-center bg-white my-5 p-5 rounded-2xl shadow drop-shadow-md border"
     >
       <ACommand
           :command="selected_command"
@@ -201,6 +201,7 @@ export default {
       this.selected_command = c
     },
     execute(e) {
+      this.isError = false
       this.isOpen = true
       this.$store.commit('clear_output')
       try {

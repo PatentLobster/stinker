@@ -94,7 +94,7 @@ export default {
       this.editor.focus();
     },
     resize() {
-      // this.editor.layout({ width: this.$el.offsetWidth, height: this.$el.offsetHeight });
+      this.editor.layout({ width: this.$el.offsetWidth, height: this.$el.offsetHeight });
     }
   },
   // render() {

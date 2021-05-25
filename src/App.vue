@@ -1,11 +1,11 @@
 <template>
-  <div class="h-screen flex bg-gray-50 overflow-hidden">
+  <div class="h-screen max-h-full flex bg-gray-50 overflow-hidden">
 
     <NavBar/>
 
     <div class="flex-1 min-w-0 flex flex-col overflow-hidden">
       <main class="flex-1 flex overflow-hidden">
-        <div class="flex-1 flex xl:overflow-hidden">
+
           <section aria-labelledby="primary-heading" class="min-w-full flex-1 h-full flex flex-col  lg:order-last">
             <div class="flex items-center justify-between bg-gray-800  min-w-0">
               <div class="flex-1 py-2 min-w-full">
@@ -16,7 +16,6 @@
             </div>
           <router-view />
           </section>
-        </div>
       </main>
     </div>
   </div>
@@ -25,7 +24,11 @@
 <script>
 
 import NavBar from "@/components/NavBar";
+const { ipcRenderer } = require('electron')
+// import { shell } from 'electron'
 
+// const {URL} = require('URL')
+import URL from 'url'
 export default {
   name: 'app',
   components: {
@@ -35,6 +38,16 @@ export default {
     routeName() {
       return this.$route.name
     }
+  },
+  mounted() {
+    ipcRenderer.on('stinker_invoked', (event, arg) => {
+      const e = URL.parse(arg);
+      this.$store.commit('set_argv', e.query);
+      this.$store.commit('set_code','$obj;');
+      this.$router.push('/tinker');
+    })
+
+
   }
 }
 </script>

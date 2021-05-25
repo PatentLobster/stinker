@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4 py-5 sm:px-6 divide-y">
+  <div class="px-4 py-5 sm:px-6  divide-y">
     <div class="mb-2">
       <h2 class="text-lg leading-6 font-medium text-gray-900">
         {{ command.name }}

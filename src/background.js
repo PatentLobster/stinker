@@ -2,7 +2,9 @@
 
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
+const { ipcMain } = require('electron')
 import installExtension /*{ VUEJS_DEVTOOLS }*/ from 'electron-devtools-installer'
+import * as path from "path";
 const isDevelopment = process.env.NODE_ENV !== 'production'
 require('@electron/remote/main').initialize()
 const Store = require('electron-store');
@@ -13,9 +15,19 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
+app.setAsDefaultProtocolClient('stinker');
+const showProcessArgv = () => console.log('Process args: %o', process.argv);
+if (app.isReady()) showProcessArgv();
+
+ipcMain.on('app_loaded', (event, arg) => {
+  const argv = showProcessArgv()
+  event.reply('asynchronous-reply', argv)
+})
+
+let win;
  async function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
+   win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -23,7 +35,8 @@ protocol.registerSchemesAsPrivileged([
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-      contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION
+      contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
+      preload: path.resolve(__static, 'preload.js')
     }
   })
 
@@ -53,10 +66,18 @@ app.on('activate', async() => {
   if (BrowserWindow.getAllWindows().length === 0) await createWindow()
 })
 
+app.on('open-url', function (event, url) {
+
+  event.preventDefault
+  win.webContents.send('stinker_invoked', url)
+
+});
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+  showProcessArgv
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {

@@ -7,7 +7,7 @@
             Hey <span class="font-gochi"> {{user.name}} </span>
           </h1>
         </div>
-        <div class="pt-4">
+        <div class="py-4">
           <p>
             To get started make sure to select laravel project and php path in the
 
@@ -18,6 +18,22 @@
             </router-link>
           </p>
         </div>
+        <div class="py-4">
+          <p>
+            Add
+            <button
+                @click="openLink"
+                to="stinker.php"
+                class="inline-flex items-center px-1 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+              this helper function
+            </button>
+            to launch Stinker from runtime with an object you want to play with.
+          </p>
+
+          <CodeBlock>
+            {{`tinker($anything);`}}
+          </CodeBlock>
+        </div>
       </div>
     </div>
   </div>
@@ -25,15 +41,21 @@
 
 <script>
 import { mapState } from "vuex";
+const { shell } = require('electron')
+import path from 'path'
+import CodeBlock from "../components/CodeBlock";
 export default {
   name: 'Home',
   components: {
+    CodeBlock
   },
   computed: {
       ...mapState(['user'])
   },
   methods: {
-
+    openLink() {
+      shell.openPath(path.join(__static, 'stinker.php'))
+    }
   },
 }
 </script>
