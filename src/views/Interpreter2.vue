@@ -39,21 +39,22 @@ export default {
     }
   },
   computed: {
-    ...mapState(['output', 'php_path', 'dir', 'code', 'arg_code' ]),
+    ...mapState(['output', 'php_path', 'dir', 'code', 'arg_code', 'tinkering' ]),
   },
   methods: {
-    executeTinker() {
-      if (this.$store.state.php_path !== "") {
+    async executeTinker() {
+      if (this.$store.state.php_path !== "" && this.tinkering === false) {
         this.$store.commit('clear_output')
+        this.$store.state.tinkering = true;
         const tinker = spawn(this.$store.state.php_path, [`artisan`, "tinker"], { cwd: this.dir });
         tinker.stdout.setEncoding("utf-8");
-        tinker.stdin.write(this.arg_code);
+        await tinker.stdin.write(this.arg_code);
         tinker.stdin.write(this.code);
         tinker.stdout.on("data", (data) => {
           this.$store.commit('set_output', data)
-          this.$store.state.tinkering = false;
         });
         tinker.stdin.end();
+        this.$store.state.tinkering = false;
       } else {
         console.log("Error", "php executable not found.\r\nGo to Settings and choose an executable.");
       }
