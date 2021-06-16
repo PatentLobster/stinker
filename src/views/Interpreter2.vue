@@ -1,13 +1,14 @@
 <template>
   <div class="interpreter">
-    <div class="grid grid-cols-2 divide divide-blue-50">
-    <div class="   min-h-full">
-      <Editor class=" min-h-screen" language="php-x" theme="one-light" :value="code" @input="setCode" v-model="code"></Editor>
-    </div>
-        <div class="   min-h-full">
-                  <Editor v-model="output" :value="output" style="height: 50vh" class="min-h-full" language="php-x" theme="one-light" />
-    </div>
-    </div>
+      <SplitPane>
+        <template v-slot:left>
+          <Editor class=" min-h-screen h-full" language="php-x" theme="one-light" :value="code" @input="setCode" v-model="code"></Editor>
+        </template>
+        <template v-slot:right>
+          <Editor v-model="output" :value="output" style="height: 50vh" class="min-h-screen h-full" language="php-x" theme="one-light" />
+      </template>
+      </SplitPane>
+  </div>
     <div class="absolute flex-grow bottom-0 pt-3 pb-7 min-w-full h-4 bg-blue-50 border shadow shadow-lg  divide-x">
       <div class="relative flex max-h-4 bottom-1 mt-1">
         <button type="button"
@@ -17,7 +18,6 @@
           <SaveIcon class="ml-2 -mr-0.5 h-4 w-4" aria-hidden="true" />
         </button>
       </div>
-    </div>
 
   </div>
 </template>
@@ -25,6 +25,7 @@
 <script>
 import { SaveIcon  } from '@heroicons/vue/outline'
 import Editor from "../components/Editor";
+import SplitPane from "../components/SplitPane";
 import { spawn } from "child_process";
 import { mapState } from 'vuex';
 export default {
@@ -32,6 +33,7 @@ export default {
   components: {
     Editor,
     SaveIcon,
+    SplitPane
   },
   data: () => {
     return {
