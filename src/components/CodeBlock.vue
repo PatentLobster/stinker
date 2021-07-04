@@ -35,13 +35,7 @@ export default {
     Prism.highlightAllUnder(this.$refs.codeBlock);
   },
 
-  // updated() {
-// Prism.highlightAllUnder(this.$refs.codeBlock);
-//     if ( typeof this.$slots.default()[0] === 'string' ) {
-//       const newText = this.$slots.default()[0].replace(/^[\r\n\s]*|[\r\n\s]*$/g, '');
-//       this.$el.querySelector('code').textContent = newText;
-//     }
-//     }
+
 }
 </script>
 

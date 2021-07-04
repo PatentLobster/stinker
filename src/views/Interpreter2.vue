@@ -2,7 +2,7 @@
   <div class="interpreter">
       <SplitPane>
         <template v-slot:left>
-          <Editor class=" min-h-screen h-full" language="php-x" theme="one-light" :value="code" @input="setCode" v-model="code"></Editor>
+          <Editor class=" min-h-screen h-full" language="php-x" theme="one-light" @input="setCode" v-model="code" ></Editor>
         </template>
         <template v-slot:right>
           <Editor v-model="output" :value="output" style="height: 50vh" class="min-h-screen h-full" language="php-x" theme="one-light" />
@@ -68,6 +68,16 @@ export default {
       this.$store.commit('set_code', e.target.value)
       this.executeTinker()
     },
-  }
+  },
+  mounted: function () {
+         this.$nextTick(function () {
+             window.addEventListener('keyup', event => {
+                if((event.altKey || event.metaKey ) && event.key === 's'){
+                     console.log("lol")
+                     this.saveSnippet();
+                 }
+             })
+         });
+     }
 }
 </script>
