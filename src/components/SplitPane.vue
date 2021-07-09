@@ -21,7 +21,7 @@ export default {
   name: 'SplitPane',
   data() {
     return {
-      gutter: 11,
+      gutter: 0,
       split: 50,
       dragging: false,
     };

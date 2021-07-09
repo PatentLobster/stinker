@@ -20,24 +20,35 @@
       </div>
 
   </div>
+  <Notif
+      :show="showNotification"
+      :callback="closeNotif"
+      timeout="2500"
+      title="Wohoo!"
+      content="Snippet saved."
+  />
 </template>
 
 <script>
 import { SaveIcon  } from '@heroicons/vue/outline'
 import Editor from "../components/Editor";
 import SplitPane from "../components/SplitPane";
+import Notif from "../components/Notif";
 import { spawn } from "child_process";
 import { mapState } from 'vuex';
+
 export default {
   name: 'Tinker',
   components: {
     Editor,
     SaveIcon,
-    SplitPane
+    SplitPane,
+    Notif
   },
   data: () => {
     return {
       isOpen: false,
+      showNotification: false
     }
   },
   computed: {
@@ -62,7 +73,11 @@ export default {
       }
     },
     saveSnippet() {
-      this.$store.dispatch('add_snippet',this.code)
+      this.$store.dispatch('add_snippet',this.code);
+      this.showNotification = true;
+    },
+    closeNotif() {
+      this.showNotification = false;
     },
     setCode(e) {
       this.$store.commit('set_code', e.target.value)
