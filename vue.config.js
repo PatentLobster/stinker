@@ -19,8 +19,9 @@ module.exports = {
         mainProcessTypeChecking: false, // Manually enable type checking during webpack bundling for background file.
         enableRemoteModule: true,
         builderOptions: {
-            appId: "io.itzik.stinker",
             productName: "Stinker",
+            appId: "io.itzik.stinker",
+            publish: ['github'],
             files: ['**/*', 'build/icons/**/*'],
             extraResources: [
                 {

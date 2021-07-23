@@ -59,6 +59,8 @@
                     <label class="w-32 inline-flex flex-col items-center  bg-indigo-500 text-white rounded-lg shadow-lg tracking-wide border border-blue cursor-pointer ">
                       <span class="p-1 text-sm">Select a folder</span>
                       <input type='file' class="hidden" id="dir"
+
+                             accept="artisan"
                              @change="openProject"
                       />
                     </label>
@@ -98,6 +100,7 @@ export default {
   methods: {
 
     openProject(e) {
+      console.log(e.target.files[0].path)
       this.$store.dispatch('open_project',  e.target.files[0].path)
     },
     handleFileChange(e) {

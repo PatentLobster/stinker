@@ -85,14 +85,14 @@ export default {
       window.addEventListener("resize", () => {
         this.resize();
       });
-      
-      this.$root.$on('resize-pane', () => {
-        this.resize();
-      });
 
-      this.on('resize-pane', () => {
-        this.resize();
-      });
+      // this.$root.$on('resize-pane', () => {
+      //   this.resize();
+      // });
+      //
+      // this.on('resize-pane', () => {
+      //   this.resize();
+      // });
 
       this.$emit("editorDidMount", this.editor);
     },

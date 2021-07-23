@@ -1,6 +1,6 @@
 {
   "name": "stinker",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -21,6 +21,7 @@
     "autoprefixer": "^9",
     "core-js": "^3.6.5",
     "electron-store": "^8.0.0",
+    "electron-updater": "^4.3.9",
     "execa": "^5.0.0",
     "iniparser": "^1.0.5",
     "lowdb": "^1.0.0",

@@ -12,6 +12,7 @@ export default createStore({
     arg_code: '',
     code: '',
     output: '',
+    auto_exec: true,
     snippets: [],
     snippets_count: 0,
     env: '',
@@ -74,6 +75,12 @@ export default createStore({
       },
       set_argv(state, payload) {
           state.arg_code = `$obj = unserialize(base64_decode('${payload}'));`;
+      },
+      tinker(state, payload) {
+          state.tinkering = payload;
+      },
+      set_auto(state) {
+          state.auto_exec = !state.auto_exec;
       }
   },
   actions:{
