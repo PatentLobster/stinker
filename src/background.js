@@ -10,7 +10,7 @@ require('@electron/remote/main').initialize()
 const Store = require('electron-store');
 Store.initRenderer()
 import { autoUpdater } from "electron-updater";
-
+let win;
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
@@ -25,7 +25,27 @@ ipcMain.on('app_loaded', (event, arg) => {
   event.reply('asynchronous-reply', argv)
 })
 
-let win;
+ipcMain.on('updater-ready', () => {
+  autoUpdater.checkForUpdates()
+})
+
+autoUpdater.on('update-available', () => {
+  win.webContents.send('update-available');
+})
+
+ipcMain.on('download-update', () => {
+    autoUpdater.downloadUpdate()
+})
+
+autoUpdater.on('update-downloaded', () => {
+    win.webContents.send('update-downloaded');
+})
+
+ipcMain.on('install-update', () => {
+    autoUpdater.quitAndInstall()
+})
+
+
  async function createWindow() {
   // Create the browser window.
    win = new BrowserWindow({

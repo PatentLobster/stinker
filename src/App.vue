@@ -47,6 +47,16 @@ export default {
       this.$router.push('/tinker');
     })
 
+    ipcRenderer.on('update-available', () => {
+     console.log('update available');
+     ipcRenderer.send('download-update');
+    });
+
+    ipcRenderer.on('update-downloaded', () => {
+      console.log('update-downloaded');
+      ipcRenderer.send('install-update');
+    });
+
 
   }
 }
