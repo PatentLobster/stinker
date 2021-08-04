@@ -55,8 +55,8 @@ import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
 import Editor from "../components/Editor";
 import SplitPane from "../components/SplitPane";
 import Notif from "../components/Notif";
-import { spawn } from "child_process";
 import { mapState } from 'vuex';
+const {sync} = require('execa');
 
 export default {
   name: 'Tinker',
@@ -77,24 +77,30 @@ export default {
     }
   },
   computed: {
-    ...mapState(['output', 'php_path', 'dir', 'code', 'arg_code', 'tinkering', 'auto_exec' ]),
+    ...mapState(['output', 'php_path', 'dir', 'code', 'arg_code', 'tinkering', 'auto_exec', 'code_path' ]),
   },
   methods: {
     async executeTinker() {
       if (this.$store.state.php_path !== "" && this.tinkering === false) {
         this.$store.commit('clear_output')
         this.$store.state.tinkering = true;
-        const tinker = spawn(this.$store.state.php_path, [`artisan`, "tinker"], { cwd: this.dir });
-        tinker.stdout.setEncoding("utf-8");
-        await tinker.stdin.write(this.arg_code);
-        tinker.stdin.write(this.code);
-        tinker.stdout.on("data", (data) => {
-          this.$store.commit('set_output', data)
-        });
-        tinker.stdin.end();
+        let {stdout} = sync(
+            this.$store.state.php_path,
+            [
+                "stinker.phar",
+                this.dir,
+                "tinker",
+                "--tinker_from=" + this.code_path,
+                (this.arg_code !== "") ? "--sideload=" + this.arg_code : ""
+            ],
+            { cwd: __static}
+        );
+        this.$store.commit('set_output', stdout)
+
         this.$store.state.tinkering = false;
       } else {
         console.log("Error", "php executable not found.\r\nGo to Settings and choose an executable.");
+        this.$store.state.tinkering = false;
       }
     },
     saveSnippet() {
@@ -106,7 +112,7 @@ export default {
     },
     setCode(e) {
       this.$store.commit('tinker', true)
-      this.$store.commit('set_code', e.target.value)
+      this.$store.dispatch('update_code', e.target.value)
       if (this.auto_exec) {
           setTimeout(() => {
             this.$store.commit('tinker', false)

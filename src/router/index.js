@@ -2,7 +2,9 @@ import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router
 import Home from '../views/Home.vue'
 import Preferences from "../views/Preferences";
 import Snippets from "../views/Snippets";
-import Tools from "../views/Commands";
+import Commands from "../views/Commands";
+// import Tools from "../views/Commands";
+import Servers from "../views/Servers";
 const routes = [
   {
     path: '/',
@@ -30,7 +32,12 @@ const routes = [
   {
     path: '/commands',
     name: 'Commands',
-    component: Tools
+    component: Commands
+  },
+  {
+    path: '/servers',
+    name: 'Servers',
+    component: Servers
   },
 ]
 

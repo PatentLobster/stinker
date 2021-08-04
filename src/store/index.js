@@ -6,28 +6,43 @@ const settings = new Store();
 import db from "../lib/nosql"
 const crypto = require('crypto')
 const {sync} = require('execa');
+import fs from 'fs';
+
 export default createStore({
-    state: {
-    php_path: '',
-    arg_code: '',
-    code: '',
-    output: '',
-    auto_exec: true,
-    snippets: [],
-    snippets_count: 0,
-    env: '',
-    project: '',
-    project_path: '',
-    dir: '',
-    tinkering: false,
-    active_processes: {},
-    user: {
-      name: '',
-      email: '',
-      profileImage: ''
-    },
-    commands: {},
-    sorted_commands: [],
+        state: {
+        php_path: '',
+        arg_code: '',
+        code: '',
+        code_path: '',
+        output: '',
+        auto_exec: true,
+        snippets: [],
+        snippets_count: 0,
+        env: '',
+        project: '',
+        project_path: '',
+        dir: '',
+        tinkering: false,
+        active_processes: {},
+        servers: [],
+        server: {
+          name: "",
+          host: '',
+          port: 22,
+          username: '',
+          password: '',
+          pem: '',
+          passphrase: '',
+          project_path: ''
+        },
+        servers_count: 0,
+        user: {
+          name: '',
+          email: '',
+          profileImage: ''
+        },
+        commands: {},
+        sorted_commands: [],
   },
   mutations: {
       set_php_path(state, payload) {
@@ -74,16 +89,42 @@ export default createStore({
       );
       },
       set_argv(state, payload) {
-          state.arg_code = `$obj = unserialize(base64_decode('${payload}'));`;
+          state.arg_code = `$obj=unserialize(base64_decode('${payload}'));`;
       },
       tinker(state, payload) {
           state.tinkering = payload;
       },
       set_auto(state) {
           state.auto_exec = !state.auto_exec;
-      }
+      },
+      set_server(state, payload) {
+          state.server = payload;
+      },
+      refresh_servers(state) {
+          state.servers = db.get('servers').value();
+      },
+      increment_servers(state) {
+          state.servers_count++
+      },
+      decrement_servers(state) {
+          state.servers_count--
+      },
   },
   actions:{
+      add_server({commit}, payload) {
+          db.get('servers')
+              .push(payload)
+              .write();
+          commit('set_server', payload);
+          commit("refresh_servers");
+          commit("increment_servers");
+
+      },
+      delete_server({commit}, payload) {
+          db.get('servers').remove(payload).write()
+          commit("refresh_servers");
+          commit("decrement_servers");
+      },
       add_snippet({commit}, payload) {
           db.get('snippets')
               .push({ code: payload, time:new Date()})
@@ -132,6 +173,11 @@ export default createStore({
           commit('set_dir', payload)
           commit('set_commands')
       },
+      update_code({commit, state}, payload) {
+          state.code_path = path.join(platformInfo.tempDirectory, 'l33tbeef')
+          fs.writeFileSync(path.join(platformInfo.tempDirectory, 'l33tbeef'), payload)
+          commit('set_code', payload)
+      }
   },
   modules: {
   }

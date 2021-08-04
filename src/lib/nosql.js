@@ -5,7 +5,7 @@ const FileSync = require('lowdb/adapters/FileSync')
 const adapter = new FileSync(platformInfo.lowDbPath)
 const lowdb = low(adapter)
 
-lowdb.defaults({ snippets: [], user: {}, count: 0 })
+lowdb.defaults({ snippets: [], user: {}, servers: [], count: 0 })
     .write()
 
 export default lowdb

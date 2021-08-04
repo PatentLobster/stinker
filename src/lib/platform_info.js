@@ -61,6 +61,8 @@ const updatesDisabled = !!p.env.BEEKEEPER_DISABLE_UPDATES
 let userDirectory =  testMode ? './tmp' : e.app.getPath("userData")
 const downloadsDirectory = testMode ? './tmp' : e.app.getPath('downloads')
 const homeDirectory = testMode ? './tmp' : e.app.getPath('home')
+const tempDirectory = e.app.getPath('temp');
+const appDirectory = e.app.getPath('appData');
 const gitConfPath = path.join(e.app.getPath('home'), '/.gitconfig')
 const gitUser = iniparser.parseSync(gitConfPath);
 if (p.env.PORTABLE_EXECUTABLE_DIR) {
@@ -86,6 +88,8 @@ const platformInfo = {
     userDirectory,
     downloadsDirectory,
     homeDirectory,
+    tempDirectory,
+    appDirectory,
     testMode,
     appDbPath: path.join(userDirectory, isDevEnv ? 'app-dev.db' : 'app.db'),
     lowDbPath: path.join(userDirectory, isDevEnv ? 'snippets-dev.json' : 'snippets.json'),
