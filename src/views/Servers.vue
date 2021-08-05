@@ -332,7 +332,18 @@ export default {
         is_tested: false,
         color: 'green'
       },
-      colors: ['red', 'yellow', 'green', 'cyan', 'teal', 'indigo', 'pink', 'purple', 'blue', 'gray']
+      colors: [
+        'red',
+        'yellow',
+        'green',
+        'cyan',
+        'teal',
+        'indigo',
+        'pink',
+        'purple',
+        'blue',
+        'gray'
+      ]
     }
   },
   computed: {
