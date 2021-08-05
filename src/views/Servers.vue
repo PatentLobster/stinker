@@ -51,7 +51,7 @@
       <li class="mt-6 ">
         <button
             type="button"
-            @click="open = true"
+            @click="open_dialog"
             class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
           <PlusIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
@@ -270,7 +270,7 @@
                   class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
               >
                 <CheckIcon class="h-5 w-5 text-white" />
-                Test Connection
+                Save
               </button>
               <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm" @click="open = false" ref="cancelButtonRef">
                 Cancel
@@ -285,14 +285,14 @@
 
 <script>
 
-import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { PlusIcon, ServerIcon, CheckIcon, LightBulbIcon, FolderIcon, KeyIcon, UserIcon, LockClosedIcon, TrashIcon } from '@heroicons/vue/solid'
 import {mapState} from "vuex";
 import Notif from "../components/Notif";
+
+import { PlusIcon, ServerIcon, CheckIcon, LightBulbIcon, FolderIcon, KeyIcon, UserIcon, LockClosedIcon, TrashIcon } from '@heroicons/vue/solid'
+import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+
 const { Client } = require('@electerm/ssh2');
 const { readFileSync } = require('fs');
-
-
 
 export default {
   components: {
@@ -314,7 +314,7 @@ export default {
   },
   data: () => {
     return {
-      open: true,
+      open: false,
       showNotification: false,
       notification: {
         title: "",
@@ -332,20 +332,24 @@ export default {
         is_tested: false,
         color: 'green'
       },
-      colors: ['red', 'yellow', 'green', 'indigo', 'pink', 'purple', 'blue', 'gray']
+      colors: ['red', 'yellow', 'green', 'cyan', 'teal', 'indigo', 'pink', 'purple', 'blue', 'gray']
     }
   },
   computed: {
         ...mapState(['servers', 'servers_count' ]),
   },
   methods: {
-    save_server() {
+    open_dialog() {
+      this.server = {color: 'gray'};
+      this.open = true;
+    },
+    async save_server() {
       this.$store.dispatch('add_server', this.server)
     },
     delete_server(serv) {
       this.$store.dispatch('delete_server', serv)
     },
-    testConnection(server) {
+    async testConnection(server) {
       this.server = server;
       const conn = new Client();
       conn.on('ready', () => {
@@ -355,7 +359,6 @@ export default {
             console.log("nos")
             this.connectionFailure(server)
           }
-
           stream.on('close', () => {
             console.log('Stream :: close');
             conn.end();
@@ -366,7 +369,6 @@ export default {
           this.connectionSuccess(server)
         });
       }).on('error', () => {
-        console.log("shot")
         this.connectionFailure(server);
       }).on('handshake', (h) => {
         console.log(h)

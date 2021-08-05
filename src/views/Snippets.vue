@@ -113,7 +113,6 @@ const { Client } = require('@electerm/ssh2');
 const { readFileSync } = require('fs');
 
 export default {
-
   name: "Snippets",
   components: {
     TrashIcon,
@@ -131,7 +130,6 @@ export default {
     return {
       isOpen: false,
       isError: false,
-
     }
   },
   computed: {
@@ -152,25 +150,27 @@ export default {
     },
     execute_server(code, server) {
       this.$store.dispatch('update_code', code)
-      console.log(this.code_path)
-      console.log(server)
       this.$store.commit('clear_output')
       this.isOpen = true;
       const conn = new Client();
       conn.on('ready', () => {
         console.log('Client :: ready');
+        conn.exec(`rm /tmp/stinkycode`, () => {})
+
         conn.sftp((err, sftp) => {
           if (err) throw err;
           sftp.readdir('/tmp', (err, list) => {
-            if (err) throw err;
-            console.dir(list);
+            if (err) {
+              console.log(err);
+            }
+            console.dir("/tmp : ", list);
           });
           sftp.fastPut(this.code_path, '/tmp/stinkycode', {mode: 777});
           sftp.fastPut(path.join(__static, "stinker.phar"), '/tmp/stinker.phar', {mode: 777});
         });
 
         conn.exec(`php /tmp/stinker.phar ${server.project_path} tinker --tinker_from=/tmp/stinkycode`, (err, stream) => {
-          if (err) throw err;
+          if (err) this.isError = true;
           stream.on('close', (code, signal) => {
             console.log('Stream :: close :: code: ' + code + ', signal: ' + signal);
             conn.end();
@@ -183,7 +183,6 @@ export default {
             console.log('STDERR: ' + data);
           });
         });
-
       }).connect({
         host: server.host,
         port: 22,
@@ -192,22 +191,12 @@ export default {
         passphrase: server.passphrase ?? null,
         privateKey: (server.pem) ? readFileSync(server.pem) : null
       });
-
-
     }
-
   },
   mounted() {
     this.$nextTick(() => {
       this.$store.commit('refresh_servers')
-      this.$store.commit('increment_snippets')
     })
   }
-
-
 }
 </script>
-
-<style scoped>
-
-</style>
