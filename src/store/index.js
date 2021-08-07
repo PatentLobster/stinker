@@ -43,6 +43,10 @@ export default createStore({
         },
         commands: {},
         sorted_commands: [],
+        ssh_env: {
+            commands: [],
+            env: []
+        }
   },
   mutations: {
       set_php_path(state, payload) {

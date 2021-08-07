@@ -15,7 +15,7 @@
           <CodeBlock>
             {{snippet.code}}
           </CodeBlock>
-          <div class="relative ml-auto mr-2 mt-3 overflow-visible z-30">
+          <div class="relative ml-auto mr-2 mt-3 overflow-visible">
             <button
                 @click="delete_snippet(snippet)"
                 type="button"
@@ -26,7 +26,7 @@
                   aria-hidden="true" /> Delete
             </button>
 
-              <span class="relative z-10 flex py-2 shadow-sm rounded-md overflow-visible">
+              <span class="relative flex py-2 shadow-sm rounded-md overflow-visible">
                 <button
                     type="button"
                     @click="execute_snippet(snippet.code)"
@@ -36,7 +36,7 @@
                   class="mr-2 -ml-0.5 h-4 w-4"
                   aria-hidden="true" /> Tinker
                 </button>
-                <Menu as="span" class="-ml-px relative block z-30 overflow-visible">
+                <Menu as="span" class="-ml-px relative block overflow-visible">
                   <MenuButton class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
                     <span class="sr-only">Open options</span>
                     <ChevronDownIcon class="h-5 w-5" aria-hidden="true" />

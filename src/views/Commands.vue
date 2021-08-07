@@ -101,6 +101,7 @@ import { mapState } from "vuex";
 import {sync} from 'execa';
 import Modal from "../components/Modal";
 import ACommand from "../components/ACommand";
+
 export default {
   name: "Commands",
   components: {

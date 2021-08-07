@@ -3,8 +3,8 @@
     <div class="bg-white shadow mx-auto overflow-hidden sm:rounded-lg">
       <div class="px-8 py-8 sm:px-6 divide-y divide-dotted">
         <div>
-          <h1 class="text-4xl font-bold">
-            Hey <span class="font-gochi"> {{user.name}} </span>
+          <h1 class="text-4xl font-bold text-center">
+            Hey <span class="font-gochi"> {{user.name}}. </span>
           </h1>
         </div>
         <div class="py-4">
@@ -23,7 +23,6 @@
             Add
             <button
                 @click="openLink"
-                to="stinker.php"
                 class="inline-flex items-center px-1 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
               this helper function
             </button>
@@ -31,9 +30,24 @@
           </p>
 
           <CodeBlock>
-            {{`tinker($anything);`}}
+            {{`//base64_encode(serialize($anything)); \n tinker($anything); `}}
           </CodeBlock>
         </div>
+
+        <div class="text-center pt-4 my-auto">
+          Usage: <span
+            class="inline-flex items-center px-1 py-0.5 rounded-l-full rounded-r-0 text-sm font-medium bg-blue-100 text-blue-800">
+              stinker://open</span>
+          <span
+              class="inline-flex items-center px-1 py-0.5 text-sm font-medium bg-yellow-100 text-yellow-800">
+              ?
+            </span>
+          <span
+              class="inline-flex items-center  px-1 py-0.5 rounded-r-full rounded-l-0 text-sm font-medium bg-purple-100 text-purple-800">
+              {base64_string}
+            </span>
+        </div>
+
       </div>
     </div>
   </div>
