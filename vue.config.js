@@ -26,9 +26,11 @@ module.exports = {
             extraResources: [
                 {
                     from: './public',
-                    to: 'public'
+                    to: 'public',
+                    filter: ["**/*"]
                 }
             ],
+            asarUnpack: ["**/*.phar"],
             mac: {
                 entitlements: "./build/entitlements.mac.plist",
                 entitlementsInherit: "./build/entitlements.mac.plist",

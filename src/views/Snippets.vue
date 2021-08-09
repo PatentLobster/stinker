@@ -166,7 +166,7 @@ export default {
             console.dir("/tmp : ", list);
           });
           sftp.fastPut(this.code_path, '/tmp/stinkycode', {mode: 777});
-          sftp.fastPut(path.join(__static, "stinker.phar"), '/tmp/stinker.phar', {mode: 777});
+          sftp.fastPut(path.join(__static, "../public/stinker.phar"), '/tmp/stinker.phar', {mode: 777});
         });
 
         conn.exec(`php /tmp/stinker.phar ${server.project_path} tinker --tinker_from=/tmp/stinkycode`, (err, stream) => {

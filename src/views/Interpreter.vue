@@ -86,10 +86,8 @@ import Notif from "../components/Notif";
 import { mapState } from 'vuex';
 import path from "path";
 const {sync} = require('execa');
-// import * as path from 'path'
 const { Client } = require('@electerm/ssh2');
 const { readFileSync } = require('fs');
-
 
 export default {
   name: 'Tinker',
@@ -125,13 +123,13 @@ export default {
         let {stdout} = sync(
             this.$store.state.php_path,
             [
-                path.join(__static, "stinker.phar"),
+                path.join(__static, "../public/stinker.phar"),
                 this.dir,
                 "tinker",
                 "--tinker_from=" + this.code_path,
                 (this.arg_code !== "") ? "--sideload=" + this.arg_code : ""
             ],
-            { cwd: __static}
+            { cwd: this.dir}
         );
         this.$store.commit('set_output', stdout)
 
@@ -173,7 +171,7 @@ export default {
           });
 
           sftp.fastPut(this.code_path, '/tmp/stinkycode', {mode: 777});
-          sftp.fastPut(path.join(__static, "stinker.phar"), '/tmp/stinker.phar', {mode: 777});
+          sftp.fastPut(path.join(__static, "../public/stinker.phar"), '/tmp/stinker.phar', {mode: 777});
         });
 
         conn.exec(`php /tmp/stinker.phar ${server.project_path} tinker --tinker_from=/tmp/stinkycode`, (err, stream) => {
