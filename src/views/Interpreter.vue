@@ -125,7 +125,7 @@ export default {
         let {stdout} = sync(
             this.$store.state.php_path,
             [
-                "stinker.phar",
+                path.join(__static, "stinker.phar"),
                 this.dir,
                 "tinker",
                 "--tinker_from=" + this.code_path,

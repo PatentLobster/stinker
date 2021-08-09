@@ -235,7 +235,14 @@
                       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <KeyIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
                       </div>
-                      <input type="text" name="pem" id="pem" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="~/.ssh/id_rsa" />
+                      <input
+                          type="text"
+                          name="pem"
+                          id="pem"
+                          v-model="server.pem"
+                          class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+                          placeholder="~/.ssh/id_rsa"
+                      />
                     </div>
                   </div>
 
@@ -367,7 +374,7 @@ export default {
         console.log('Client :: ready');
         conn.shell((err, stream) => {
           if (err) {
-            console.log("nos")
+            console.log("err")
             this.connectionFailure(server)
           }
           stream.on('close', () => {
@@ -391,6 +398,7 @@ export default {
         passphrase: server.passphrase ?? null,
         privateKey: (server.pem) ? readFileSync(server.pem) : null
       });
+      console.log(readFileSync(server.pem))
     },
     connectionSuccess(server) {
       server.is_tested = true;
