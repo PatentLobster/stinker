@@ -27,7 +27,7 @@ module.exports = {
                 {
                     from: './public',
                     to: 'public',
-                    filter: ["**/*"]
+                    filter: ["**/*.phar"]
                 }
             ],
             asarUnpack: ["**/*.phar"],

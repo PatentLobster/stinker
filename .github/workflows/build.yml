@@ -35,5 +35,5 @@ jobs:
       - name: Save artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: save-artifacts
-          path: dist_electron/**/*
+          name: mac-dmg
+          path: dist_electron/*.dmg

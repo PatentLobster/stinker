@@ -20,7 +20,7 @@ app.setAsDefaultProtocolClient('stinker');
 const showProcessArgv = () => console.log('Process args: %o', process.argv);
 if (app.isReady()) showProcessArgv();
 
-ipcMain.on('app_loaded', (event, arg) => {
+ipcMain.on('app_loaded', (event) => {
   const argv = showProcessArgv()
   event.reply('asynchronous-reply', argv)
 })
@@ -57,7 +57,7 @@ ipcMain.on('install-update', () => {
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
-      preload: path.resolve(__static, 'preload.js')
+      // preload: path.resolve(__static, 'preload.js')
     }
   })
 
