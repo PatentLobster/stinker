@@ -4,34 +4,32 @@
     <aside class="order-first flex flex-col flex-shrink-0 w-64 border-r border-gray-200">
       <div class="px-6 pt-6 pb-4">
         <h2 class="text-lg font-medium text-gray-900">Commands</h2>
-<!--        TODO: add search -->
-<!--        <p class="mt-1 text-sm text-gray-600">-->
-<!--          Search {{sorted_commands.count}} commands-->
-<!--        </p>-->
-<!--        <form class="mt-6 flex space-x-4" action="#">-->
-<!--          <div class="flex-1 min-w-0">-->
-<!--            <label for="search" class="sr-only">Search</label>-->
-<!--            <div class="relative rounded-md shadow-sm">-->
-<!--              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">-->
-<!--                <SearchIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />-->
-<!--              </div>-->
-<!--              <input type="search" name="search" id="search" class="focus:ring-pink-500 focus:border-pink-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="Search" />-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <button type="submit" class="inline-flex justify-center px-3.5 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">-->
-<!--            <FilterIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />-->
-<!--            <span class="sr-only">Search</span>-->
-<!--          </button>-->
-<!--        </form>-->
+          <div class="flex-1 min-w-0">
+            <label for="search" class="sr-only">Search {{count}}</label>
+            <div class="relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <SearchIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+              </div>
+              <input
+                  type="search"
+                  name="search"
+                  v-model="searchString"
+                  @input="search"
+                  id="search"
+                  class="focus:ring-pink-500 focus:border-pink-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="Search" />
+            </div>
+          </div>
       </div>
       <!-- Directory list -->
-      <nav class="flex-1 overflow-y-scroll flex-grow h-full" aria-label="Directory">
-        <div v-for="directory in Object.keys(sorted_commands)" :key="directory" class="block">
+      <nav class="flex-1 overflow-y-scroll mb-16 flex-grow h-full" aria-label="Directory">
+        <div v-for="directory in Object.keys(sorted_commands).sort()" :key="directory" class="block">
           <div class="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
             <h3>{{ directory }}</h3>
           </div>
           <ul class="relative z-0 divide-y divide-gray-200">
-            <li v-for="command in sorted_commands[directory]" :key="command.name">
+            <li v-for="command in sorted_commands[directory].sort(function(a, b) {
+   return a.name.localeCompare(b.name);
+})" :key="command.name">
               <div class="relative px-6 py-5 flex items-center space-x-3 hover:bg-gray-50 focus-within:ring-2 focus-within:ring-inset focus-within:ring-pink-500">
                 <div class="flex-1 min-w-0">
                   <button
@@ -96,6 +94,7 @@
 
 <script>
 
+import {SearchIcon} from "@heroicons/vue/solid"
 import platformInfo from "../lib/platform_info";
 import { mapState } from "vuex";
 import {sync} from 'execa';
@@ -106,17 +105,19 @@ export default {
   name: "Commands",
   components: {
     ACommand,
-    Modal
+    Modal,
+    SearchIcon,
   },
   data: () => {
     return {
       selected_command: null,
       isOpen: false,
-      isError: false
+      isError: false,
+      searchString: ''
     }
   },
   computed: {
-    ...mapState(['user', 'php_path', 'dir', 'commands', 'sorted_commands', 'output']),
+    ...mapState(['user', 'php_path', 'dir', 'commands', 'sorted_commands', 'output', 'count']),
     pi: () => platformInfo,
   },
   methods: {
@@ -138,6 +139,10 @@ export default {
     closeModal() {
       this.isOpen = false;
       this.isError = false;
+    },
+    search() {
+      console.log(this.searchString)
+      this.$store.dispatch('filter_commands', this.searchString)
     }
   },
   mounted() {

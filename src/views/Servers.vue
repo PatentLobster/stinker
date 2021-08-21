@@ -363,6 +363,8 @@ export default {
     },
     async save_server() {
       this.$store.dispatch('add_server', this.server)
+      this.open = false;
+      this.server = {};
     },
     delete_server(serv) {
       this.$store.dispatch('delete_server', serv)

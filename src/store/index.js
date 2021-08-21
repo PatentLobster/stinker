@@ -1,13 +1,13 @@
 import { createStore } from 'vuex'
 import platformInfo from "../lib/platform_info";
 import Store from "electron-store";
-import * as path from "path";
 const settings = new Store();
+import { join, dirname }  from "path";
 import db from "../lib/nosql"
 const crypto = require('crypto')
 const {sync} = require('execa');
-import fs from 'fs';
-
+import {writeFileSync} from 'fs';
+import  {tmpdir} from "os";
 export default createStore({
         state: {
         php_path: '',
@@ -15,7 +15,7 @@ export default createStore({
         code: '',
         code_path: '',
         output: '',
-        auto_exec: true,
+        auto_exec: false,
         snippets: [],
         snippets_count: 0,
         env: '',
@@ -46,7 +46,7 @@ export default createStore({
         ssh_env: {
             commands: [],
             env: []
-        }
+        },
   },
   mutations: {
       set_php_path(state, payload) {
@@ -54,7 +54,7 @@ export default createStore({
           state.php_path = payload
       },
       set_dir(state, payload) {
-           const f = path.dirname(payload)
+           const f = dirname(payload)
            settings.set(`dir`, f)
            state.dir = f
       },
@@ -92,6 +92,7 @@ export default createStore({
           {}
       );
       },
+
       set_argv(state, payload) {
           state.arg_code = `$obj=unserialize(base64_decode('${payload}'));`;
       },
@@ -178,10 +179,29 @@ export default createStore({
           commit('set_commands')
       },
       update_code({commit, state}, payload) {
-          state.code_path = path.join(platformInfo.tempDirectory, 'l33tbeef')
-          fs.writeFileSync(path.join(platformInfo.tempDirectory, 'l33tbeef'), payload)
           commit('set_code', payload)
-      }
+          state.code_path = join(tmpdir(), 'stinkycode')
+          writeFileSync(join(tmpdir(), 'stinkycode'), payload)
+      },
+      filter_commands({state},payload) {
+          const commands = settings.get('commands');
+          let sorted =  commands.sort().reduce(
+              (result, comm) => {
+                  if (comm.name.toLowerCase().includes(payload)) {
+                      const i = comm.name[0].toUpperCase();
+                      (result[i]) ? result[i].push(comm) : result[i] = [comm];
+                      return {
+                          ...result,
+                      };
+                  }
+                  return {
+                      ...result,
+                  };
+              },
+              {});
+          state.sorted_commands = sorted
+
+      },
   },
   modules: {
   }

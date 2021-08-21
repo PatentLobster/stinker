@@ -37,12 +37,10 @@
           <span
               class="relative text-xs left-2 bottom-2 font-xs" :class="(arg.is_required) ? 'text-red-500' : 'text-gray-500'"
           >
-          {{ arg.is_required ? "*Required." : "Not required." }}
+          {{ arg.is_required ? "*Required." : "Optional." }}
         </span>
         </label>
-        <p>
-          {{ arg.description }} <br/>
-        </p>
+        <p v-html="arg.description" />
 
         <div class="mt-1 flex rounded-md shadow-sm">
                         <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-blue-gray-300 bg-blue-gray-50 text-blue-gray-500 sm:text-sm">
@@ -64,12 +62,10 @@
           <span
               class="relative text-xs left-2 bottom-2 font-xs" :class="(arg.is_required) ? 'text-red-500' : 'text-gray-500'"
           >
-          {{ arg.is_required ? "*Required." : "Not required." }}
+          {{ arg.is_required ? "*Required." : "Optional." }}
         </span>
         </label>
-        <p>
-          {{ arg.description }} <br/>
-        </p>
+        <p v-html="arg.description" />
         <div v-if="arg.accept_value === true" class="mt-1 flex rounded-md shadow-sm">
                         <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-blue-gray-300 bg-blue-gray-50 text-blue-gray-500 sm:text-sm">
                           {{ arg.name }}

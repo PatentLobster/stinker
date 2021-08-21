@@ -39,7 +39,7 @@
                     <ChevronDownIcon class="h-4 w-4" aria-hidden="true" />
                   </MenuButton>
                   <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-                    <MenuItems class="origin-bottom-right absolute -top-24 right-0 z-10  mb-2 mr-1 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <MenuItems class="origin-bottom-right absolute  right-0 z-10 bottom-2 mb-2 mr-1 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <div class="py-1">
                         <MenuItem v-for="server in servers" :key="server.name">
                           <div
@@ -84,7 +84,7 @@ import Editor from "../components/Editor";
 import SplitPane from "../components/SplitPane";
 import Notif from "../components/Notif";
 import { mapState } from 'vuex';
-import path from "path";
+import {join as pathJoin} from "path";
 const {sync} = require('execa');
 const { Client } = require('@electerm/ssh2');
 const { readFileSync } = require('fs');
@@ -116,14 +116,14 @@ export default {
     ...mapState(['output', 'php_path', 'dir', 'code', 'arg_code', 'tinkering', 'auto_exec', 'code_path', 'servers' ]),
   },
   methods: {
-    async executeTinker() {
+    executeTinker() {
       if (this.$store.state.php_path !== "" && this.tinkering === false) {
         this.$store.commit('clear_output')
         this.$store.state.tinkering = true;
         let {stdout} = sync(
             this.$store.state.php_path,
             [
-                path.join(__static, "../public/stinker.phar"),
+                pathJoin(__static, "../public/stinker.phar"),
                 this.dir,
                 "tinker",
                 "--tinker_from=" + this.code_path,
@@ -151,11 +151,9 @@ export default {
         this.$store.commit('tinker', true);
       this.$store.dispatch('update_code', e.target.value)
       if (this.auto_exec) {
-          setTimeout(() => {
-            this.$store.commit('tinker', false)
-            this.executeTinker()
-          }, 420);
-        }
+        this.$store.commit('tinker', false)
+        this.executeTinker()
+      }
     },
     execute_server(server) {
       this.$store.commit('clear_output')
@@ -170,8 +168,8 @@ export default {
             console.dir(list);
           });
 
-          sftp.fastPut(this.code_path, '/tmp/stinkycode', {mode: 777});
-          sftp.fastPut(path.join(__static, "../public/stinker.phar"), '/tmp/stinker.phar', {mode: 777});
+          sftp.fastPut(this.code_path, '/tmp/stinkycode');
+          sftp.fastPut(pathJoin(__static, "../public/stinker.phar"), '/tmp/stinker.phar');
         });
 
         conn.exec(`php /tmp/stinker.phar ${server.project_path} tinker --tinker_from=/tmp/stinkycode`, (err, stream) => {
