@@ -26,6 +26,7 @@
 import NavBar from "@/components/NavBar";
 const { ipcRenderer } = require('electron')
 // import { shell } from 'electron'
+// import {colorMixin} from "./lib/colorMixin";
 
 // const {URL} = require('URL')
 import URL from 'url'
@@ -56,8 +57,7 @@ export default {
       console.log('update-downloaded');
       ipcRenderer.send('install-update');
     });
+  },
 
-
-  }
 }
 </script>

@@ -60,7 +60,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="css">
 .split-pane {
   display: flex;
   flex-direction: row;

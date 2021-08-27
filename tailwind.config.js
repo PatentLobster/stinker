@@ -1,9 +1,8 @@
 const colors = require('tailwindcss/colors')
 
 module.exports = {
-  purge: {
+    purge: {
     content: ['./public/**/*.html', './src/**/*.vue'],
-
     options: {
       safelist: [
           'bg-red-100',

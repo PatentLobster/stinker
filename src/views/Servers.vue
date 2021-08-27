@@ -102,11 +102,11 @@
           <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
             <div>
               <div
-                  :class="`bg-${server.color}-100`"
+                  :class="getLightBGColor(server.color)"
                   class="mx-auto flex items-center justify-center h-12 w-12 rounded-full"
               >
                 <ServerIcon
-                    :class="`text-${server.color}-600`"
+                    :class="getIconColor(server.color)"
                     class="h-6 w-6"
                     aria-hidden="true" />
               </div>
@@ -122,7 +122,7 @@
                           @click="server.color = color"
                           class="block p-1 border-2 rounded-full transition ease-in duration-300 focus:outline-none  ">
                         <button
-                            :class="[`bg-${color}-500`]"
+                            :class="getBGColor(color)"
                             @click="server.color = color"
                             class="block w-4 h-4 rounded-full focus:outline-none"
                         />
@@ -297,6 +297,7 @@ import Notif from "../components/Notif";
 
 import { PlusIcon, ServerIcon, CheckIcon, LightBulbIcon, FolderIcon, KeyIcon, UserIcon, LockClosedIcon, TrashIcon } from '@heroicons/vue/solid'
 import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import {colorMixin} from "../lib/colorMixin";
 
 const { Client } = require('@electerm/ssh2');
 const { readFileSync } = require('fs');
@@ -426,6 +427,7 @@ export default {
     this.$nextTick( () => {
       this.$store.commit('refresh_servers')
     } )
-  }
+  },
+  mixins: [colorMixin]
 }
 </script>

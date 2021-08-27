@@ -2,14 +2,14 @@
   <div class="interpreter">
       <SplitPane>
         <template v-slot:left>
-          <Editor class=" min-h-screen h-full" language="php-x" theme="one-light"
-                  @input="setCode"
+          <Editor class=" min-h-screen h-full" language="php-x"
+                  @change="setCode"
                   ref="ide"
                   value=""
            ></Editor>
         </template>
         <template v-slot:right>
-          <Editor v-model="output" :value="output" style="height: 50vh" class="min-h-screen h-full" language="php-x" theme="one-light" />
+          <Editor v-model="output" :value="output" style="height: 50vh" class="min-h-screen h-full" language="php-x" />
       </template>
       </SplitPane>
   </div>
@@ -26,7 +26,7 @@
         <span class="relative ml-auto mr-12 flex max-h-4 my-auto">
                 <button
                     type="button"
-                    @click="executeTinker"
+                    @click="this.$store.dispatch('executeLocal')"
                     class="r-24 inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-6 font-medium border-gray-300 bg-white rounded-md rounded-r-none text-gray-500 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                 >
                   <LightningBoltIcon
@@ -84,10 +84,7 @@ import Editor from "../components/Editor";
 import SplitPane from "../components/SplitPane";
 import Notif from "../components/Notif";
 import { mapState } from 'vuex';
-import {join as pathJoin} from "path";
-const {sync} = require('execa');
-const { Client } = require('@electerm/ssh2');
-const { readFileSync } = require('fs');
+
 
 export default {
   name: 'Tinker',
@@ -113,32 +110,9 @@ export default {
     }
   },
   computed: {
-    ...mapState(['output', 'php_path', 'dir', 'code', 'arg_code', 'tinkering', 'auto_exec', 'code_path', 'servers' ]),
+    ...mapState(['output', 'php_path', 'dir', 'code', 'arg_code', 'tinkering', 'auto_exec', 'code_path', 'servers', 'isError' ]),
   },
   methods: {
-    executeTinker() {
-      if (this.$store.state.php_path !== "" && this.tinkering === false) {
-        this.$store.commit('clear_output')
-        this.$store.state.tinkering = true;
-        let {stdout} = sync(
-            this.$store.state.php_path,
-            [
-                pathJoin(__static, "../public/stinker.phar"),
-                this.dir,
-                "tinker",
-                "--tinker_from=" + this.code_path,
-                (this.arg_code !== "") ? "--sideload=" + this.arg_code : ""
-            ],
-            { cwd: this.dir}
-        );
-        this.$store.commit('set_output', stdout)
-
-        this.$store.state.tinkering = false;
-      } else {
-        console.log("Error", "php executable not found.\r\nGo to Settings and choose an executable.");
-        this.$store.state.tinkering = false;
-      }
-    },
     saveSnippet() {
       this.$store.dispatch('add_snippet',this.code);
       this.showNotification = true;
@@ -146,57 +120,17 @@ export default {
     closeNotif() {
       this.showNotification = false;
     },
-    setCode(e) {
+    setCode() {
       if (this.auto_exec)
         this.$store.commit('tinker', true);
-      this.$store.dispatch('update_code', e.target.value)
+      this.$store.dispatch('update_code', this.$refs.ide.editor.getModel().getValue())
       if (this.auto_exec) {
         this.$store.commit('tinker', false)
-        this.executeTinker()
+        this.$store.dispatch('executeLocal')
       }
     },
     execute_server(server) {
-      this.$store.commit('clear_output')
-      const conn = new Client();
-      conn.on('ready', () => {
-        console.log('Client :: ready');
-        conn.exec(`rm /tmp/stinkycode`, () => {})
-        conn.sftp((err, sftp) => {
-          if (err) throw err;
-          sftp.readdir('/tmp', (err, list) => {
-            if (err) throw err;
-            console.dir(list);
-          });
-
-          sftp.fastPut(this.code_path, '/tmp/stinkycode');
-          sftp.fastPut(pathJoin(__static, "../public/stinker.phar"), '/tmp/stinker.phar');
-        });
-
-        conn.exec(`php /tmp/stinker.phar ${server.project_path} tinker --tinker_from=/tmp/stinkycode`, (err, stream) => {
-          if (err) this.isError = true;
-          stream.on('close', (code, signal) => {
-            console.log('Stream :: close :: code: ' + code + ', signal: ' + signal);
-            conn.end();
-          }).on('data', (data) => {
-            this.$store.commit('set_output', data)
-            console.log('STDOUT: ' + data);
-          }).stderr.on('data', (data) => {
-            this.isError = true;
-            this.$store.commit('set_output', data)
-            console.log('STDERR: ' + data);
-          });
-        });
-
-      }).connect({
-        host: server.host,
-        port: 22,
-        username: server.username,
-        password: server.password ?? null,
-        passphrase: server.passphrase ?? null,
-        privateKey: (server.pem) ? readFileSync(server.pem) : null
-      });
-
-
+      this.$store.dispatch('execute_server', server)
     }
   },
   mounted: function () {
@@ -207,12 +141,10 @@ export default {
                this.saveSnippet();
              }
            });
-
            if (this.code) {
               this.$refs.ide.editor.getModel().setValue(this.code);
-              this.executeTinker()
+              this.$store.dispatch('executeLocal')
            }
-
          });
   },
 

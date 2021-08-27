@@ -1,13 +1,19 @@
-import { createStore } from 'vuex'
+import {createStore} from 'vuex'
 import platformInfo from "../lib/platform_info";
 import Store from "electron-store";
+import {dirname, join} from "path";
+
+import {db} from "../services/db"
+import {writeFileSync} from 'fs';
+import {tmpdir} from "os";
+import StinkerService from "../services/StinkerService";
+
+const Stinker = new StinkerService();
 const settings = new Store();
-import { join, dirname }  from "path";
-import db from "../lib/nosql"
 const crypto = require('crypto')
 const {sync} = require('execa');
-import {writeFileSync} from 'fs';
-import  {tmpdir} from "os";
+
+
 export default createStore({
         state: {
         php_path: '',
@@ -47,6 +53,7 @@ export default createStore({
             commands: [],
             env: []
         },
+        isError: false,
   },
   mutations: {
       set_php_path(state, payload) {
@@ -66,9 +73,15 @@ export default createStore({
       },
       clear_output(state) {
            state.output = ''
+           state.isError = false
       },
-      refresh_snippets(state) {
-           state.snippets = db.get('snippets').value()
+      async refresh_snippets(state) {
+
+          state.snippets = await db
+              .snippets
+              .orderBy('id')
+              .toArray();
+
       },
       increment_snippets(state) {
           state.snippets_count++
@@ -90,9 +103,8 @@ export default createStore({
             };
           },
           {}
-      );
+        );
       },
-
       set_argv(state, payload) {
           state.arg_code = `$obj=unserialize(base64_decode('${payload}'));`;
       },
@@ -105,8 +117,11 @@ export default createStore({
       set_server(state, payload) {
           state.server = payload;
       },
-      refresh_servers(state) {
-          state.servers = db.get('servers').value();
+      async refresh_servers(state) {
+          state.servers = await db
+              .servers
+              .orderBy('id')
+              .toArray();
       },
       increment_servers(state) {
           state.servers_count++
@@ -114,44 +129,44 @@ export default createStore({
       decrement_servers(state) {
           state.servers_count--
       },
+      set_error(state, payload) {
+          state.isError = payload
+      }
   },
   actions:{
-      add_server({commit}, payload) {
-          db.get('servers')
-              .push(payload)
-              .write();
+      async executeLocal(context) {
+          Stinker.executeLocal(context)
+      },
+      async executeServer(context, payload) {
+        Stinker.executeServer(payload, context);
+      },
+      async add_server({commit}, payload) {
+          await db.servers.add(payload)
           commit('set_server', payload);
           commit("refresh_servers");
           commit("increment_servers");
 
       },
-      delete_server({commit}, payload) {
-          db.get('servers').remove(payload).write()
+      async delete_server({commit}, payload) {
+          await db.servers.delete(payload.id)
           commit("refresh_servers");
           commit("decrement_servers");
       },
-      add_snippet({commit}, payload) {
-          db.get('snippets')
-              .push({ code: payload, time:new Date()})
-              .write()
-
-          // Increment count
-          db.update('count', n => n + 1)
-              .write()
+      async add_snippet({commit, state}, payload) {
+          await db.snippets.add({
+              code: payload,
+              preload: state.arg_code
+          })
           commit('refresh_snippets')
           commit('increment_snippets') // 💩
       },
       delete_snippet({commit}, payload) {
-          db.get('snippets').remove(payload).write()
-
-          // Decrement count
-          db.update('count', n => n - 1)
-              .write()
-
+          console.log(payload)
+          db.snippets.delete(payload.id)
           commit('refresh_snippets')
           commit('decrement_snippets') // Either Im stupid or vue is. 💩
       },
-      refresh_settings({commit, state}) {
+      async refresh_settings({commit, state}) {
           state.php_path = settings.get("php_path");
           if (!settings.get("user")) {
               const user = platformInfo.gitUser
@@ -162,9 +177,8 @@ export default createStore({
 
           state.user = settings.get("user");
           state.dir  = settings.get("dir");
-          state.snippets = db.get('snippets').value()
-          state.snippets_count = db.get('count').value()
-
+          state.snippets = await db.snippets.toArray();
+          state.snippets_count = await db.snippets.count()
           if (state.dir && state.php_path) {
               state.project = settings.get('project')
               if (settings.get('commands')) {
@@ -185,7 +199,7 @@ export default createStore({
       },
       filter_commands({state},payload) {
           const commands = settings.get('commands');
-          let sorted =  commands.sort().reduce(
+          state.sorted_commands = commands.sort().reduce(
               (result, comm) => {
                   if (comm.name.toLowerCase().includes(payload)) {
                       const i = comm.name[0].toUpperCase();
@@ -198,9 +212,7 @@ export default createStore({
                       ...result,
                   };
               },
-              {});
-          state.sorted_commands = sorted
-
+              {})
       },
   },
   modules: {

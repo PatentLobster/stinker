@@ -108,10 +108,6 @@ import { mapState } from "vuex";
 import Modal from "../components/Modal";
 import CodeBlock from "../components/CodeBlock";
 
-import * as path from 'path'
-const { Client } = require('@electerm/ssh2');
-const { readFileSync } = require('fs');
-
 export default {
   name: "Snippets",
   components: {
@@ -133,7 +129,7 @@ export default {
     }
   },
   computed: {
-    ...mapState([`snippets`, `snippets_count`,`servers`, `code_path`, `code`, `output`]),
+    ...mapState([`snippets`, `snippets_count`,`servers`, `code_path`, `code`, `output`, `isError`]),
   },
   methods: {
     delete_snippet(item) {
@@ -146,51 +142,12 @@ export default {
 
     closeModal() {
       this.isOpen = false;
-      this.isError = false;
     },
     execute_server(code, server) {
       this.$store.dispatch('update_code', code)
       this.$store.commit('clear_output')
       this.isOpen = true;
-      const conn = new Client();
-      conn.on('ready', () => {
-        console.log('Client :: ready');
-        conn.exec(`rm /tmp/stinkycode`, () => {})
-
-        conn.sftp((err, sftp) => {
-          if (err) throw err;
-          sftp.readdir('/tmp', (err, list) => {
-            if (err) {
-              console.log(err);
-            }
-            console.dir("/tmp : ", list);
-          });
-          sftp.fastPut(this.code_path, '/tmp/stinkycode', {mode: 777});
-          sftp.fastPut(path.join(__static, "../public/stinker.phar"), '/tmp/stinker.phar', {mode: 777});
-        });
-
-        conn.exec(`php /tmp/stinker.phar ${server.project_path} tinker --tinker_from=/tmp/stinkycode`, (err, stream) => {
-          if (err) this.isError = true;
-          stream.on('close', (code, signal) => {
-            console.log('Stream :: close :: code: ' + code + ', signal: ' + signal);
-            conn.end();
-          }).on('data', (data) => {
-            this.$store.commit('set_output', data)
-            console.log('STDOUT: ' + data);
-          }).stderr.on('data', (data) => {
-            this.isError = true;
-            this.$store.commit('set_output', data)
-            console.log('STDERR: ' + data);
-          });
-        });
-      }).connect({
-        host: server.host,
-        port: 22,
-        username: server.username,
-        password: server.password ?? null,
-        passphrase: server.passphrase ?? null,
-        privateKey: (server.pem) ? readFileSync(server.pem) : null
-      });
+      this.$store.dispatch('execute_server', server)
     }
   },
   mounted() {
