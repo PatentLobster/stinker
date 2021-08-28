@@ -54,6 +54,7 @@ export default createStore({
             env: []
         },
         isError: false,
+        appVersion: ''
   },
   mutations: {
       set_php_path(state, payload) {
@@ -167,6 +168,7 @@ export default createStore({
           commit('decrement_snippets') // Either Im stupid or vue is. 💩
       },
       async refresh_settings({commit, state}) {
+          state.appVersion = platformInfo.appVersion
           state.php_path = settings.get("php_path");
           if (!settings.get("user")) {
               const user = platformInfo.gitUser

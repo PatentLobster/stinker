@@ -1,5 +1,5 @@
 <template>
-  <div class="home container mx-auto px-4 sm:px-6 lg:px-8 flex justify-center mt-3">
+  <div class="home container mx-auto px-4 sm:px-6 lg:px-8 flex my-auto justify-center mt-16">
     <div class="bg-white shadow mx-auto overflow-hidden sm:rounded-lg">
       <div class="px-8 py-8 sm:px-6 divide-y divide-dotted">
         <div>

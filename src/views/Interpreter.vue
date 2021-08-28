@@ -78,6 +78,7 @@
 </template>
 
 <script>
+
 import { SaveIcon, LightningBoltIcon, ChevronDownIcon  } from '@heroicons/vue/outline'
 import { Switch, SwitchGroup, SwitchLabel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import Editor from "../components/Editor";
@@ -130,23 +131,27 @@ export default {
       }
     },
     execute_server(server) {
-      this.$store.dispatch('execute_server', server)
+      this.$store.dispatch('executeServer', server)
+    },
+    handle_save_key(event) {
+      if((event.altKey || event.metaKey ) && event.key === 's'){
+        this.saveSnippet();
+      }
     }
   },
   mounted: function () {
          this.$nextTick(function () {
            this.$store.commit('refresh_servers')
-           window.addEventListener('keyup', event => {
-             if((event.altKey || event.metaKey ) && event.key === 's'){
-               this.saveSnippet();
-             }
-           });
+           window.addEventListener('keyup', this.handle_save_key);
            if (this.code) {
               this.$refs.ide.editor.getModel().setValue(this.code);
               this.$store.dispatch('executeLocal')
            }
          });
   },
+  unmounted() {
+    window.removeEventListener('keyup', this.handle_save_key);
+  }
 
 }
 </script>

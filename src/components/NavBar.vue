@@ -46,6 +46,9 @@
                         <div class="ml-3 mr-3 p-3 overflow-guard">
                           <p class="inline">This is a useless menu 💩</p>
                         </div>
+                        <div class="ml-3 mr-3 p-3 overflow-guard">
+                          <p class="inline">Stinker V{{appVersion}}</p>
+                        </div>
                       </div>
                 </div>
               </PopoverPanel>
@@ -98,6 +101,7 @@ export default {
     const store = useStore()
     return {
       user: computed(() => store.state.user),
+      appVersion: computed(() => store.state.appVersion),
       navigation,
       mobileMenuOpen,
     }

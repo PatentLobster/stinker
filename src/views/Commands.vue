@@ -1,10 +1,9 @@
 <template>
-  <div>
+  <div class="overflow-hidden">
     <div class="h-screen max-h-full overflow-guard flex" v-if="php_path && dir ">
     <aside class="order-first flex flex-col flex-shrink-0 w-64 border-r border-gray-200">
       <div class="px-6 pt-6 pb-4">
-        <h2 class="text-lg font-medium text-gray-900">Commands</h2>
-          <div class="flex-1 min-w-0">
+          <div class="flex-1 min-w-0 py-2">
             <label for="search" class="sr-only">Search {{count}}</label>
             <div class="relative rounded-md shadow-sm">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -16,12 +15,13 @@
                   v-model="searchString"
                   @input="search"
                   id="search"
+                  ref="search"
                   class="focus:ring-pink-500 focus:border-pink-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md" placeholder="Search" />
             </div>
           </div>
       </div>
       <!-- Directory list -->
-      <nav class="flex-1 overflow-y-scroll mb-16 flex-grow h-full" aria-label="Directory">
+      <nav class="flex-1 overflow-y-scroll mb-12 flex-grow h-full" aria-label="Directory">
         <div v-for="directory in Object.keys(sorted_commands).sort()" :key="directory" class="block">
           <div class="z-10 sticky top-0 border-t border-b border-gray-200 bg-gray-50 px-6 py-1 text-sm font-medium text-gray-500">
             <h3>{{ directory }}</h3>
@@ -143,11 +143,22 @@ export default {
     search() {
       console.log(this.searchString)
       this.$store.dispatch('filter_commands', this.searchString)
+    },
+    goto_search(e) {
+      if ((e.ctrlKey || e.metaKey || e.altKey) && e.code === 'KeyF') {
+        this.$refs.search.focus()
+      }
     }
   },
   mounted() {
     if (this.php_path && this.dir)
     this.$store.commit('set_commands')
-  }
+    this.$nextTick(() => {
+      document.addEventListener('keyup', this.goto_search)
+    })
+  },
+  unmounted () {
+    document.removeEventListener('keyup', this.goto_search)
+  },
 }
 </script>

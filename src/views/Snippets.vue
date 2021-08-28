@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class=" divide-y" v-if="snippets_count > 0">
+    <div class="min-h-screen overflow-auto divide-y" v-if="snippets_count > 0">
       <div class="sr-only">
         You got: {{snippets_count}} snippets.
       </div>
       <div
-          class="grid grid-cols-1 gap-6 overflow-visible"
+          class=" grid grid-cols-1 gap-6"
           v-for="(snippet, i)  in snippets"
           :key="i"
       >
@@ -15,7 +15,7 @@
           <CodeBlock>
             {{snippet.code}}
           </CodeBlock>
-          <div class="relative ml-auto mr-2 mt-3 overflow-visible">
+          <div class="relative ml-auto mr-2 mt-3">
             <button
                 @click="delete_snippet(snippet)"
                 type="button"
@@ -125,7 +125,6 @@ export default {
   data: () => {
     return {
       isOpen: false,
-      isError: false,
     }
   },
   computed: {
@@ -147,7 +146,7 @@ export default {
       this.$store.dispatch('update_code', code)
       this.$store.commit('clear_output')
       this.isOpen = true;
-      this.$store.dispatch('execute_server', server)
+      this.$store.dispatch('executeServer', server)
     }
   },
   mounted() {

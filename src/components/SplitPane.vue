@@ -42,7 +42,6 @@ export default {
     },
     dragMove(e) {
       if (this.dragging) {
-        this.$root.$emit('resize-pane');
         const dx = e.pageX - this.startX;
         const totalWidth = this.$el.offsetWidth;
         this.split = this.startSplit + ~~((dx / totalWidth) * 100);

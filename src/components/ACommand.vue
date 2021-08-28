@@ -207,6 +207,7 @@ export default {
       this.$emit('exec', parsed)
     }
   },
+  emits: ['exec'],
   mounted() {
   },
   watch: {

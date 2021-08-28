@@ -3,8 +3,8 @@
 
     <NavBar/>
 
-    <div class="flex-1 min-w-0 flex flex-col overflow-hidden">
-      <main class="flex-1 flex overflow-hidden">
+    <div class="flex-1 min-w-0 flex flex-col">
+      <main class="flex-1 flex overflow-y-auto">
 
           <section aria-labelledby="primary-heading" class="min-w-full flex-1 h-full flex flex-col  lg:order-last">
             <div class="flex items-center justify-between bg-gray-800  min-w-0">

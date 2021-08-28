@@ -3,7 +3,6 @@
     thanks egoist
     https://github.com/egoist/vue-monaco/blob/master/src/MonacoEditor.js
 */
-// import { h } from 'vue'
 require('../lib/php_x')
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 export default {
@@ -55,6 +54,7 @@ export default {
   },
   beforeUnmount() {
     this.editor && this.editor.dispose();
+    window.removeEventListener("resize", this.resize);
   },
   methods: {
     initMonaco(monaco) {
@@ -74,7 +74,6 @@ export default {
         this.options
       );
       this.editor = monaco.editor.create(this.$el, options);
-      // @event `change`
       const editor = this.getEditor();
       editor.onDidChangeModelContent((event) => {
         const value = editor.getValue();
@@ -82,18 +81,7 @@ export default {
           this.$emit("change", value, event);
         }
       });
-      window.addEventListener("resize", () => {
-        this.resize();
-      });
-
-      // this.$root.$on('resize-pane', () => {
-      //   this.resize();
-      // });
-      //
-      // this.on('resize-pane', () => {
-      //   this.resize();
-      // });
-
+      window.addEventListener("resize", this.resize);
       this.$emit("editorDidMount", this.editor);
     },
     getEditor() {
@@ -106,14 +94,9 @@ export default {
       this.editor.layout({ width: this.$el.offsetWidth, height: this.$el.offsetHeight });
     }
   },
-  // render() {
-  //   return h("div");
-  // }
 };
 </script>
 
 <template>
   <div/>
 </template>
-
-<style></style>
