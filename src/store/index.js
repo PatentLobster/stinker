@@ -23,6 +23,7 @@ export default createStore({
         output: '',
         auto_exec: false,
         snippets: [],
+        tags: [],
         snippets_count: 0,
         env: '',
         project: '',
@@ -132,6 +133,9 @@ export default createStore({
       },
       set_error(state, payload) {
           state.isError = payload
+      },
+      async refresh_tags(state) {
+          state.tags = await db.tags.toArray()
       }
   },
   actions:{
@@ -141,12 +145,40 @@ export default createStore({
       async executeServer(context, payload) {
         Stinker.executeServer(payload, context);
       },
+      async add_tag({commit}, payload) {
+          await db.tags.put(payload)
+          commit('refresh_tags')
+      },
+      async delete_tag({commit}, payload) {
+          await db.tags.delete(payload.id)
+          await db.snippets.where('tags').equals(payload.name).distinct().modify(item => {
+              item.tags = item.tags.filter(tag => {
+                  return tag !== payload.name
+              })
+          })
+          commit('refresh_tags')
+          commit('refresh_snippets')
+      },
+      async tag_snippet({commit}, payload) {
+          if (!payload.tag.id) {
+              await db.tags.put(payload.tag)
+          }
+          await db.snippets.where({id: payload.snippet.id}).modify(snippet => {
+              if (!snippet.tags) {
+                  snippet.tags = []
+              }
+              if (snippet.tags.includes(payload.tag.name)) {
+                  snippet.tags.splice(snippet.tags.indexOf(payload.tag.name, 1))
+              } else {
+                  snippet.tags.push(payload.tag.name)
+              }
+          })
+          commit('refresh_snippets')
+      },
       async add_server({commit}, payload) {
-          await db.servers.add(payload)
+          await db.servers.put(payload)
           commit('set_server', payload);
           commit("refresh_servers");
-          commit("increment_servers");
-
       },
       async delete_server({commit}, payload) {
           await db.servers.delete(payload.id)
@@ -156,14 +188,18 @@ export default createStore({
       async add_snippet({commit, state}, payload) {
           await db.snippets.add({
               code: payload,
-              preload: state.arg_code
+              preload: state.arg_code,
+              tags: []
           })
           commit('refresh_snippets')
           commit('increment_snippets') // 💩
       },
-      delete_snippet({commit}, payload) {
-          console.log(payload)
-          db.snippets.delete(payload.id)
+      async update_snippet({commit}, payload) {
+          await db.snippets.put(payload)
+          commit('refresh_snippets')
+      },
+      async delete_snippet({commit}, payload) {
+          await db.snippets.delete(payload.id)
           commit('refresh_snippets')
           commit('decrement_snippets') // Either Im stupid or vue is. 💩
       },
@@ -181,6 +217,7 @@ export default createStore({
           state.dir  = settings.get("dir");
           state.snippets = await db.snippets.toArray();
           state.snippets_count = await db.snippets.count()
+          commit('refresh_tags');
           if (state.dir && state.php_path) {
               state.project = settings.get('project')
               if (settings.get('commands')) {
@@ -215,6 +252,10 @@ export default createStore({
                   };
               },
               {})
+      },
+      async save_tag({state}, payload) {
+          db.tags.put(payload);
+          state.tags = await db.tags.toArray()
       },
   },
   modules: {

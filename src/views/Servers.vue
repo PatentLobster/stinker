@@ -38,6 +38,13 @@
           >
             <CheckIcon class="h-5 w-5" aria-hidden="true" />
           </button>
+                    <button
+              type="button"
+              @click="updateConnection(serv)"
+              class="mx-2 mt-2 flex items-center p-1 border border-transparent rounded-full shadow-sm text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            <PencilAltIcon class="h-5 w-5" aria-hidden="true" />
+          </button>
           <button
               type="button"
               @click="delete_server(serv)"
@@ -80,6 +87,7 @@
     </div>
     <span class="sr-only"> {{servers_count}} </span>
   </div>
+
   <Notif
 
       timeout="7500"
@@ -88,7 +96,6 @@
       :title="notification.title"
       :content="notification.content"
   />
-
   <TransitionRoot as="template" :show="open">
     <Dialog as="div" static class="fixed z-10 inset-0 overflow-y-auto" @close="open = false" :open="open">
       <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -295,7 +302,7 @@
 import {mapState} from "vuex";
 import Notif from "../components/Notif";
 
-import { PlusIcon, ServerIcon, CheckIcon, LightBulbIcon, FolderIcon, KeyIcon, UserIcon, LockClosedIcon, TrashIcon } from '@heroicons/vue/solid'
+import { PlusIcon, ServerIcon, CheckIcon, LightBulbIcon, FolderIcon, KeyIcon, UserIcon, LockClosedIcon, TrashIcon, PencilAltIcon } from '@heroicons/vue/solid'
 import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import {colorMixin} from "../lib/colorMixin";
 
@@ -310,6 +317,7 @@ export default {
     TransitionChild,
     TransitionRoot,
     CheckIcon,
+    PencilAltIcon,
     PlusIcon,
     ServerIcon,
     LightBulbIcon,
@@ -366,6 +374,10 @@ export default {
       this.$store.dispatch('add_server', this.server)
       this.open = false;
       this.server = {};
+    },
+    updateConnection(serv) {
+      this.server = serv;
+      this.open = true;
     },
     delete_server(serv) {
       this.$store.dispatch('delete_server', serv)

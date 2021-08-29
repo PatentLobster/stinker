@@ -4297,6 +4297,11 @@ detective@^5.2.0:
     defined "^1.0.0"
     minimist "^1.1.1"
 
+dexie-relationships@^1.2.11:
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/dexie-relationships/-/dexie-relationships-1.2.11.tgz#04c5b1edede09b53b6a9e8a4a6b07ca504addae6"
+  integrity sha512-dptIUMiCiEPnSPyZno6yOrmFo+xf0Y1PVC4LX2HO/VgPAYIoaf/wMcC7mbna+RMZ6wRIOEb4T+lgR5v21q2EnA==
+
 dexie@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/dexie/-/dexie-3.0.3.tgz#ede63849dfe5f07e13e99bb72a040e8ac1d29dab"

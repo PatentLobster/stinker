@@ -1,8 +1,27 @@
 <template>
   <div>
+    <TagModal :open="editingTag" @close="closeTagModal" :tag="tag"/>
+    <SnippetModal :open="editingSnippet" @close="editingSnippet = false" :snippet="selectedSnippet" />
     <div class="min-h-screen overflow-auto divide-y" v-if="snippets_count > 0">
       <div class="sr-only">
         You got: {{snippets_count}} snippets.
+      </div>
+      <div class="flex p-2 my-auto">
+        <span class="text-lg font-bold pr-2">Tags: </span>
+        <ul class="flex my-auto flex-row justify-center py-0.5 items-center">
+          <li v-for="tag in tags" :key="tag.name" class="mr-4 my-auto last:mr-0">
+            <ATag :tag="tag" :edit="edit_tag"  :cb="filter_tag" :editable="true"/>
+          </li>
+        </ul>
+        <div class="mr-2 ml-auto">
+          <button
+              type="button"
+              @click="editingTag = true"
+              class="inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            <PlusIcon class="h-5 w-5" aria-hidden="true" />
+          </button>
+        </div>
       </div>
       <div
           class=" grid grid-cols-1 gap-6"
@@ -10,22 +29,40 @@
           :key="i"
       >
         <div
-            class="grid-cols-1 flex justify-center"
+            class="grid-cols-2"
         >
-          <CodeBlock>
-            {{snippet.code}}
-          </CodeBlock>
-          <div class="relative ml-auto mr-2 mt-3">
-            <button
-                @click="delete_snippet(snippet)"
-                type="button"
-                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-            >
-              <TrashIcon
-                  class="mr-2 -ml-0.5 h-4 w-4"
-                  aria-hidden="true" /> Delete
-            </button>
+          <div class="flex mx-auto justify-center">
+            <h3
+                v-html="snippet.name"
+            />
+          </div>
+<!--          <div v-for="tag in snippet.tags" :key="tag">-->
+<!--          {{tag}}-->
+<!--        </div>-->
+          <div class="flex justify-self-center">
+            <CodeBlock class="relative ml-2 mr-auto">
+              {{snippet.code}}
+            </CodeBlock>
+            <div class="relative mr-2 mt-3">
+              <button
+                  @click="delete_snippet(snippet)"
+                  type="button"
+                  class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                <TrashIcon
+                    class="mr-2 -ml-0.5 h-4 w-4"
+                    aria-hidden="true" /> Delete
+              </button>
 
+              <button
+                  @click="edit_snippet(snippet)"
+                  type="button"
+                  class="inline-flex items-center m-1 px-4 py-2 border border-transparent shadow-sm text-xs font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+              >
+                <PencilAltIcon
+                    class="mr-2 -ml-0.5 h-4 w-4"
+                    aria-hidden="true" /> Edit.
+              </button>
               <span class="relative flex py-2 shadow-sm rounded-md overflow-visible">
                 <button
                     type="button"
@@ -33,8 +70,8 @@
                     class="relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                 >
                   <LightningBoltIcon
-                  class="mr-2 -ml-0.5 h-4 w-4"
-                  aria-hidden="true" /> Tinker
+                      class="mr-2 -ml-0.5 h-4 w-4"
+                      aria-hidden="true" /> Tinker
                 </button>
                 <Menu as="span" class="-ml-px relative block overflow-visible">
                   <MenuButton class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
@@ -61,6 +98,7 @@
                   </transition>
                 </Menu>
               </span>
+            </div>
           </div>
 
         </div>
@@ -101,16 +139,19 @@
 <script>
 
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { ChevronDownIcon, ServerIcon } from '@heroicons/vue/solid'
+import { ChevronDownIcon, ServerIcon, PlusIcon, PencilAltIcon } from '@heroicons/vue/solid'
 import {TrashIcon, LightningBoltIcon}  from '@heroicons/vue/outline'
 import { mapState } from "vuex";
-
 import Modal from "../components/Modal";
+import TagModal from "../components/TagModal";
+import SnippetModal from "../components/SnippetModal";
 import CodeBlock from "../components/CodeBlock";
+import ATag from "../components/ATag";
 
 export default {
   name: "Snippets",
   components: {
+    ATag,
     TrashIcon,
     LightningBoltIcon,
     CodeBlock,
@@ -120,17 +161,37 @@ export default {
     MenuItem,
     MenuItems,
     ChevronDownIcon,
-    ServerIcon
+    ServerIcon,
+    PlusIcon,
+    PencilAltIcon,
+    TagModal,
+    SnippetModal
   },
   data: () => {
     return {
       isOpen: false,
+      tag: {},
+      editingTag: false,
+      editingSnippet: false,
+      selectedSnippet: {},
     }
   },
   computed: {
-    ...mapState([`snippets`, `snippets_count`,`servers`, `code_path`, `code`, `output`, `isError`]),
+    ...mapState([`snippets`, `snippets_count`,`servers`, `code_path`, `code`, `output`, `isError`, `tags`]),
+
   },
   methods: {
+    edit_tag(tag) {
+      this.tag = tag;
+      this.editingTag = true;
+    },
+    filter_tag(tag) {
+      console.log(tag)
+    },
+    edit_snippet(snippet) {
+      this.selectedSnippet = snippet;
+      this.editingSnippet = true;
+    },
     delete_snippet(item) {
       this.$store.dispatch('delete_snippet', item)
     },
@@ -138,8 +199,12 @@ export default {
       this.$store.dispatch('update_code', code)
       this.$router.push('/tinker')
     },
-
+    closeTagModal() {
+      this.tag = {}
+      this.editingTag = false;
+    },
     closeModal() {
+      this.snippet = null
       this.isOpen = false;
     },
     execute_server(code, server) {
@@ -153,6 +218,14 @@ export default {
     this.$nextTick(() => {
       this.$store.commit('refresh_servers')
     })
+  },
+  watch: {
+    snippets: function(newVal) {
+      if (this.selectedSnippet.id) {
+        const snippet = newVal.find(snippet => snippet.id === this.selectedSnippet.id)
+        this.selectedSnippet.tags = snippet.tags;
+      }
+    }
   }
 }
 </script>

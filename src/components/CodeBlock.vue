@@ -1,7 +1,7 @@
 <template>
 <div
     ref="codeBlock"
-    class="p-2 my-3 min-w-1/2 shadow bg-white rounded-2xl ml-auto whitespace-pre"
+    class="p-2 my-3 min-w-1/2 shadow bg-white rounded-2xl mx-auto whitespace-pre justify-self-center"
 >
   <pre class="language-php rounded">
     <code class="language-php whitespace-pre">
