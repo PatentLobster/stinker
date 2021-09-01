@@ -8,11 +8,22 @@
       </div>
       <div class="flex p-2 my-auto">
         <span class="text-lg font-bold pr-2">Tags: </span>
-        <ul class="flex my-auto flex-row justify-center py-0.5 items-center">
+        <ul class="flex my-auto flex-row justify-center py-0.5 items-center" v-if="!selectedTag">
           <li v-for="tag in tags" :key="tag.name" class="mr-4 my-auto last:mr-0">
             <ATag :tag="tag" :edit="edit_tag"  :cb="filter_tag" :editable="true"/>
           </li>
         </ul>
+        <div v-else>
+          <ATag :tag="selectedTag" :cb="clear_filter" :editable="false"/>
+          <button
+              type="button"
+              @click="clear_filter"
+              class="inline-flex items-center mr-3 my-auto p-1 border border-transparent rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <XIcon
+                class="h-4 w-4"
+                aria-hidden="true" />
+          </button>
+        </div>
         <div class="mr-2 ml-auto">
           <button
               type="button"
@@ -36,9 +47,6 @@
                 v-html="snippet.name"
             />
           </div>
-<!--          <div v-for="tag in snippet.tags" :key="tag">-->
-<!--          {{tag}}-->
-<!--        </div>-->
           <div class="flex justify-self-center">
             <CodeBlock class="relative ml-2 mr-auto">
               {{snippet.code}}
@@ -139,7 +147,7 @@
 <script>
 
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { ChevronDownIcon, ServerIcon, PlusIcon, PencilAltIcon } from '@heroicons/vue/solid'
+import { ChevronDownIcon, ServerIcon, PlusIcon, PencilAltIcon, XIcon } from '@heroicons/vue/solid'
 import {TrashIcon, LightningBoltIcon}  from '@heroicons/vue/outline'
 import { mapState } from "vuex";
 import Modal from "../components/Modal";
@@ -164,13 +172,14 @@ export default {
     ServerIcon,
     PlusIcon,
     PencilAltIcon,
+    XIcon,
     TagModal,
     SnippetModal
   },
   data: () => {
     return {
       isOpen: false,
-      tag: {},
+      selectedTag: null,
       editingTag: false,
       editingSnippet: false,
       selectedSnippet: {},
@@ -187,6 +196,12 @@ export default {
     },
     filter_tag(tag) {
       console.log(tag)
+      this.selectedTag = tag
+      this.$store.commit('filter_snippets', tag)
+    },
+    clear_filter() {
+      this.selectedTag = null
+      this.$store.commit('refresh_snippets')
     },
     edit_snippet(snippet) {
       this.selectedSnippet = snippet;

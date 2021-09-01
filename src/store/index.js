@@ -78,12 +78,18 @@ export default createStore({
            state.isError = false
       },
       async refresh_snippets(state) {
-
           state.snippets = await db
               .snippets
               .orderBy('id')
               .toArray();
 
+      },
+      async filter_snippets(state, payload) {
+        state.snippets = await  db
+            .snippets
+            .where('tags')
+            .equals(payload.name)
+            .toArray()
       },
       increment_snippets(state) {
           state.snippets_count++

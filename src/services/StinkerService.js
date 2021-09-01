@@ -19,7 +19,7 @@ export default class StinkerService {
     }
 
     createStinkerFile(sftp, cb) {
-        sftp.fastPut( pathJoin(__static, "../public/stinker.phar"), '/tmp/stinkycode').on('close', () => {
+        sftp.fastPut( pathJoin(__static, "../public/stinker.phar"), '/tmp/stinker.phar').on('close', () => {
             if (cb)
                 cb();
         })

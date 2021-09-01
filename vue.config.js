@@ -36,7 +36,11 @@ module.exports = {
                 entitlementsInherit: "./build/entitlements.mac.plist",
                 icon: './build/icons/icon.icns',
                 category: "public.app-category.developer-tools",
-                "hardenedRuntime": true
+                hardenedRuntime: true,
+                target: [
+                    "dmg",
+                    "zip"
+                ],
             },
         }
     },
