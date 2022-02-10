@@ -63,11 +63,11 @@ export default {
 .split-pane {
   display: flex;
   flex-direction: row;
-  height: 80%;
+  height: 90%;
 }
 .split-pane-item,
 .split-pane-gutter {
-  height: 80%;
+  height: 90%;
 }
 .split-pane-gutter {
   background: #000;

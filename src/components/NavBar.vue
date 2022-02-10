@@ -1,110 +1,165 @@
 <template>
-    <div class="flex flex-shrink-0">
-      <div class="flex flex-col w-16">
-        <div class="flex flex-col h-0 flex-1 overflow-y-auto bg-gray-800">
+        <nav aria-label="Sidebar" class=" block flex-shrink-0 bg-gray-800 overflow-y-auto">
+        <div class="relative w-20 flex flex-col p-3 space-y-3">
+          <router-link v-for="item in sidebarNavigation" :key="item.name" :to="item.href" :class="[item.name === route.currentRoute.value.name ? 'bg-gray-900 text-white' : 'text-gray-400 hover:bg-gray-700', 'flex-shrink-0 inline-flex items-center justify-center h-14 w-14 rounded-lg']">
+            <span class="sr-only">{{ item.name }}</span>
+            <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
+          </router-link>
+          <Menu as="div" class="relative z-20 text-left mx-auto mb-6 mt-auto bottom">
+            <MenuButton class="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600">
+              <span class="sr-only">Open user menu</span>
+              <img class="h-8 w-8 rounded-full" :src="user.imageUrl" alt="" />
+            </MenuButton>
 
-          <div class="flex-1 flex flex-col">
-            <div class="flex-shrink-0 bg-indigo-700 py-4 flex items-center  shadow justify-center">
-              <h1
-                  class="font-gochi text-white leading-5 max-h-full text-5xl">
-                z
-              </h1>
-            </div>
-            <nav aria-label="Sidebar" class="py-2 flex flex-col items-center space-y-3">
-              <router-link v-for="item in navigation" :key="item.name" :to="item.href" exact-active-class="bg-gray-900 text-white hover:bg-gray-700" class="flex items-center p-4 rounded-lg text-gray-200 hover:bg-gray-700  text-base font-medium focus:ring-2 focus:ring-indigo-600">
-                <component :is="item.icon" class="h-4 w-4" aria-hidden="true" />
-                <span class="sr-only">{{ item.name }}</span>
-              </router-link>
-            </nav>
-          </div>
-
-          <Popover class="flex-shrink-0 flex pb-5 mx-auto">
-            <PopoverButton class="block" ><img class="block mx-auto h-10 w-10 rounded-full" :src="user.profileImage" alt="" /></PopoverButton>
-              <PopoverOverlay
-                  class="bg-black"
-                  :class='open ? "opacity-30 fixed inset-0" : "opacity-0"'
-              />
-              <transition
-                  enter-active-class="transition duration-200 ease-out"
-                  enter-from-class="translate-y-1 opacity-0"
-                  enter-to-class="translate-y-0 opacity-100"
-                  leave-active-class="transition duration-150 ease-in"
-                  leave-from-class="translate-y-0 opacity-100"
-                  leave-to-class="translate-y-1 opacity-0"
-              >
-
-              <PopoverPanel
-                        class="absolute z-10 w-screen max-w-md mt-4 transform  -translate-y-32  left-1/8 sm:px-0 lg:max-w-3xl">
-                  <div
-                    class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black bg-white ring-opacity-5 text-center"
-                  >
-                      <div class="relative  grid grid-cols-1 bg-white">
-                        <div class="ml-3 mr-3 p-3 overflow-guard">
-                          <p class="inline">Hey {{ user.name }}</p>
-                        </div>
-
-                        <div class="ml-3 mr-3 p-3 overflow-guard">
-                          <p class="inline">This is a useless menu 💩</p>
-                        </div>
-                        <div class="ml-3 mr-3 p-3 overflow-guard">
-                          <p class="inline">Stinker V{{appVersion}}</p>
-                        </div>
-                      </div>
+            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+              <MenuItems class="origin-bottom-right absolute z-30  mb-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div class="py-1">
+                  <MenuItem v-slot="{ active }">
+                    <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"> Your Profile </a>
+                  </MenuItem>
+                  <MenuItem v-slot="{ active }">
+                    <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"> Sign Out </a>
+                  </MenuItem>
                 </div>
-              </PopoverPanel>
-              </transition>
-            </Popover>
-            <a href="#" class="flex-shrink-0 w-full">
-
-              <div class="sr-only">
-                <p>
-                  {{ user.name }}
-                </p>
-                <p>
-                  Account settings
-                </p>
-              </div>
-            </a>
+              </MenuItems>
+            </transition>
+          </Menu>
         </div>
-      </div>
-    </div>
+      </nav>
 </template>
 
-<script>
-import { computed, ref } from 'vue'
-import { Dialog, DialogOverlay, Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
-import { CodeIcon, TerminalIcon, ServerIcon, HomeIcon, MenuIcon, CogIcon, SparklesIcon, XIcon } from '@heroicons/vue/outline'
-import { useStore } from 'vuex'
-const navigation = [
-  { name: 'Home', href: '/', icon: HomeIcon },
-  { name: 'Tinker', href: '/Tinker', icon: SparklesIcon },
-  { name: 'Snippets', href: '/snippets', icon: CodeIcon },
-  { name: 'Tools', href: '/commands', icon: TerminalIcon },
-  { name: 'Servers', href: '/servers', icon: ServerIcon },
-  { name: 'Profile', href: '/preferences', icon: CogIcon },
-]
+<!--&lt;!&ndash; This example requires Tailwind CSS v2.0+ &ndash;&gt;-->
+<!--<template>-->
+<!--  <Disclosure as="nav" class="bg-gray-800 z-10" v-slot="{ open }">-->
+<!--    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">-->
+<!--      <div class="flex justify-between h-16">-->
+<!--        <div class="flex">-->
+<!--          <div class="-ml-2 mr-2 flex items-center md:hidden">-->
+<!--            &lt;!&ndash; Mobile menu button &ndash;&gt;-->
+<!--            <DisclosureButton class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">-->
+<!--              <span class="sr-only">Open main menu</span>-->
+<!--              <MenuIcon v-if="!open" class="block h-6 w-6" aria-hidden="true" />-->
+<!--              <XIcon v-else class="block h-6 w-6" aria-hidden="true" />-->
+<!--            </DisclosureButton>-->
+<!--          </div>-->
+<!--          <div class="flex-shrink-0 flex items-center">-->
+<!--            <img class="block lg:hidden h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg" alt="Workflow" />-->
+<!--            <img class="hidden lg:block h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg" alt="Workflow" />-->
+<!--          </div>-->
+<!--          <div class="hidden md:ml-6 md:flex md:items-center md:space-x-4">-->
+<!--            <router-link v-for="item in navigation.filter((item) => {return item.name !== ''})" :key="item.name" :to="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'px-3 py-2 rounded-md text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</router-link>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="flex items-center">-->
+<!--          <div class="flex-shrink-0">-->
+<!--            <button type="button" class="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500">-->
+<!--              <PlusSmIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />-->
+<!--              <span>New Job</span>-->
+<!--            </button>-->
+<!--          </div>-->
+<!--          <div class="hidden md:ml-4 md:flex-shrink-0 md:flex md:items-center">-->
+<!--            <button type="button" class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">-->
+<!--              <span class="sr-only">View notifications</span>-->
+<!--              <BellIcon class="h-6 w-6" aria-hidden="true" />-->
+<!--            </button>-->
 
-export default {
-  name: 'NavBar',
-  components: {
-    Dialog,
-    DialogOverlay,
-    MenuIcon,
-    XIcon,
-    SparklesIcon,
-    Popover,
-    PopoverButton,
-    PopoverPanel
-  },
-  setup() {
-    const mobileMenuOpen = ref(false)
-    const store = useStore()
-    return {
-      user: computed(() => store.state.user),
-      appVersion: computed(() => store.state.appVersion),
-      navigation,
-      mobileMenuOpen,
+<!--            &lt;!&ndash; Profile dropdown &ndash;&gt;-->
+<!--            <Menu as="div" class="ml-3 relative">-->
+<!--              <div>-->
+<!--                <MenuButton class="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">-->
+<!--                  <span class="sr-only">Open user menu</span>-->
+<!--                  <img class="h-8 w-8 rounded-full" :src="store.gravatar" alt="" />-->
+<!--                </MenuButton>-->
+<!--              </div>-->
+<!--              <transition enter-active-class="transition ease-out duration-200" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">-->
+<!--                <MenuItems class="origin-top-right z-20 absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">-->
+<!--                  <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">-->
+<!--                    <a :href="item.href" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">{{ item.name }}</a>-->
+<!--                  </MenuItem>-->
+<!--                </MenuItems>-->
+<!--              </transition>-->
+<!--            </Menu>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <DisclosurePanel class="md:hidden">-->
+<!--      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">-->
+<!--        <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block px-3 py-2 rounded-md text-base font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</DisclosureButton>-->
+<!--      </div>-->
+<!--      <div class="pt-4 pb-3 border-t border-gray-700">-->
+<!--        <div class="flex items-center px-5 sm:px-6">-->
+<!--          <div class="flex-shrink-0">-->
+<!--            <img class="h-10 w-10 rounded-full" :src="store.gravatar" alt="" />-->
+<!--            {{store.gravatar}}-->
+<!--          </div>-->
+<!--          <div class="ml-3">-->
+<!--            <div class="text-base font-medium text-white">{{ store.name }}</div>-->
+<!--            <div class="text-sm font-medium text-gray-400">{{ store.email }}</div>-->
+<!--          </div>-->
+<!--          <button type="button" class="ml-auto flex-shrink-0 bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">-->
+<!--            <span class="sr-only">View notifications</span>-->
+<!--            <BellIcon class="h-6 w-6" aria-hidden="true" />-->
+<!--          </button>-->
+<!--        </div>-->
+<!--        <div class="mt-3 px-2 space-y-1 sm:px-3">-->
+<!--          <DisclosureButton v-for="item in userNavigation" :key="item.name" as="a" :href="item.href" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">{{ item.name }}</DisclosureButton>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </DisclosurePanel>-->
+<!--  </Disclosure>-->
+<!--</template>-->
+
+<script setup>
+import {Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
+// import {BellIcon, MenuIcon, XIcon} from '@heroicons/vue/outline'
+import {PlusSmIcon} from '@heroicons/vue/solid'
+import {useRouter} from 'vue-router'
+import {computed, onMounted} from "vue"
+import {userStore} from "../store/user"
+const store = userStore()
+const route = useRouter()
+onMounted(() => {
+    if (store.name == "") {
+      store.set_git_user()
     }
-  },
+})
+import {
+  CogIcon,
+  BanIcon,
+  BellIcon,
+  FlagIcon,
+  InboxIcon,
+  MenuIcon,
+  PencilAltIcon,
+  UserCircleIcon,
+  XIcon,
+} from '@heroicons/vue/outline'
+const navigation = computed( () => {
+  return route.getRoutes().map(r => {
+    return {
+      name: r.name,
+      href: r.path,
+      current:  r.path === route.currentRoute.value.path
+    }
+  })
+})
+
+const user = {
+  name: 'Whitney Francis',
+  email: 'whitneyfrancis@example.com',
+  imageUrl:
+    'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
+
+const userNavigation = [
+  { name: 'Your Profile', href: '#' },
+  { name: 'Settings', href: '#' },
+  { name: 'Sign out', href: '#' },
+]
+const sidebarNavigation = [
+  { name: 'Home', href: '/', icon: InboxIcon },
+  { name: 'Settings', href: '/settings', icon: CogIcon },
+]
 </script>

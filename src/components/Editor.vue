@@ -3,14 +3,14 @@
     thanks egoist
     https://github.com/egoist/vue-monaco/blob/master/src/MonacoEditor.js
 */
-require('../lib/php_x')
+import '../lib/php_x'
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 export default {
-  name: "TinkerEditor",
+  name: "Editor",
   props: {
-    value: {
+    modelValue: {
       type: String,
-      required: true
+      required: false
     },
     theme: {
       type: String,
@@ -32,7 +32,7 @@ export default {
         }
       }
     },
-    value(newValue) {
+    modelValue(newValue) {
       if (this.editor) {
         const editor = this.getEditor();
         if (newValue !== editor.getValue()) {
@@ -80,6 +80,7 @@ export default {
         if (this.value !== value) {
           this.$emit("change", value, event);
         }
+        this.$emit('update:modelValue', value)
       });
       window.addEventListener("resize", this.resize);
       this.$emit("editorDidMount", this.editor);
