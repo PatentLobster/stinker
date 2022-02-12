@@ -161,5 +161,6 @@ const userNavigation = [
 const sidebarNavigation = [
   { name: 'Home', href: '/', icon: InboxIcon },
   { name: 'Settings', href: '/settings', icon: CogIcon },
+  { name: 'Snippets', href: '/snippets', icon: PencilAltIcon},
 ]
 </script>

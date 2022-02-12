@@ -41,6 +41,9 @@
     })
   }
 
+
+  // sqlite. The path is relative to `tauri::api::path::BaseDirectory::App`.
+
   // const store = useStore()
   // const handleChange = (e) => {
   //

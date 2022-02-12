@@ -29,16 +29,16 @@
 <template>
   <div class="h-full flex flex-col">
     <!-- Top nav-->
-    <header class="flex-shrink-0 relative h-16 bg-white text-black dark:text-slate-50 dark:bg-gray-700 flex items-center">
+    <header class="flex-shrink-0 relative h-16 max-h-16 bg-white text-black dark:text-slate-50 dark:bg-gray-700 flex items-center">
       <!-- Logo area -->
-      <div class="absolute inset-y-0 left-0 static flex-shrink-0">
+      <div class="absolute inset-y-0 left-0 static flex-shrink-0 shadow-lg">
         <a href="#" class="flex items-center justify-center h-16 w-16 bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600 w-20">
           <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark.svg?color=white" alt="Workflow" />
         </a>
       </div>
 
 
-      <div class="min-w-0 flex-1 right-0 pr-4  flex items-center ml-24 ">
+      <div class="min-w-0 flex-1 right-0 pr-4 max-h-16  flex items-center ml-24 ">
         <div class="pr-4 flex-shrink-0 flex items-center space-x-10">
               <h1 class="text-lg font-bold" v-text="route.name ?? ''" />
         </div>
@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import {
   Dialog,
   DialogOverlay,
@@ -99,7 +99,19 @@ import {
 } from '@heroicons/vue/outline'
 import Navbar from "./components/Navbar.vue"
 import { useRoute } from 'vue-router'
+import {useStore} from "./store/snippets";
 const route = useRoute()
+const s = useStore()
+
+onMounted(async () => {
+  try {
+    await s.initializeDbBackedStore();
+  } catch (e) {
+    console.log(`There was a problem initializing the database`, e);
+  }
+});
+
+
 
 const user = {
   name: 'Whitney Francis',
@@ -121,9 +133,9 @@ const navigation = [
   { name: 'Settings', href: '#', children: [] },
 ]
 const sidebarNavigation = [
-  { name: 'Home', href: '/', icon: InboxIcon, current: true },
-  { name: 'Settings', href: '/settings', icon: CogIcon, current: false },
-  // { name: 'Customers', href: '#', icon: UserCircleIcon, current: false },
+  { name: 'Home', href: '/', icon: InboxIcon},
+  { name: 'Settings', href: '/settings', icon: CogIcon},
+  { name: 'Snippets', href: '/snippets', icon: PencilAltIcon},
   // { name: 'Flagged', href: '#', icon: FlagIcon, current: false },
   // { name: 'Spam', href: '#', icon: BanIcon, current: false },
   // { name: 'Drafts', href: '#', icon: PencilAltIcon, current: false },
