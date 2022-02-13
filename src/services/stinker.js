@@ -50,6 +50,6 @@ export async function executeStinker(connection, code) {
         case "docker":
             return await executeDocker(connection.phpPath, connection.stinkerPhar, connection.appPath, code, connection.docker.id)
         default:
-            console.log("g")
+            console.log(connection)
     }
 }

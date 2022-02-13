@@ -50,6 +50,7 @@ export default {
     this.monaco = monaco;
     this.$nextTick(() => {
       this.initMonaco(monaco);
+      this.editor.setValue(this.$props.modelValue);
     });
   },
   beforeUnmount() {

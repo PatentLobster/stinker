@@ -5,13 +5,11 @@
         :key="snippet.id"
         class="min-w-1/2 w-5/6 justify-center mx-auto "
     >
-      <CodeBlock :snippetTitle="snippet.title" @delete="openDeleteModal(snippet)">
-        {{snippet.code}}
-      </CodeBlock>
+      <CodeBlock :snippet="snippet" @delete="openDeleteModal(snippet)" @execute="execSnippet"/>
     </div>
   </div>
-  <TransitionRoot as="template" :show="modal.open">
-    <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto" @close="modal.open = false">
+  <TransitionRoot as="template" :show="modal.deleteOpen">
+    <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto" @close="modal.deleteOpen = false">
       <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
           <DialogOverlay class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
@@ -34,41 +32,80 @@
             </div>
             <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
               <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm" @click="deleteSnippet">Delete</button>
-              <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm" @click="modal.open = false" ref="cancelButtonRef">Cancel</button>
+              <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm" @click="modal.deleteOpen = false" ref="cancelButtonRef">Cancel</button>
             </div>
           </div>
         </TransitionChild>
       </div>
     </Dialog>
   </TransitionRoot>
+
+    <CodeModal
+
+        :is-open="modal.executeOpen"
+         :is-error="modal.isError"
+         :content="modal.output"
+         :close-modal="closeModal"
+  />
 </template>
 
 
 <script setup>
 import {useStore} from "../store/snippets";
 import CodeBlock from "../components/CodeBlock.vue";
+import CodeModal from "../components/CodeModal.vue";
 import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ExclamationIcon } from '@heroicons/vue/outline'
 import {reactive} from 'vue'
+import {executeStinker} from "../services/stinker";
 
 // const open = reactive(false)
 const snip = useStore()
 const modal = reactive({
-  open: false,
+  deleteOpen: false,
+  executeOpen: false,
+  executing: false,
+  isError: false,
+  output: '',
   snippet: null
 })
 
 const deleteSnippet = async () => {
   await snip.remove(modal.snippet.id)
   modal.snippet = null;
-  modal.open = false
+  modal.deleteOpen = false
 }
 
 const openDeleteModal =  (snippet) => {
-  modal.open = true;
+  modal.deleteOpen = true;
   modal.snippet = snippet;
 }
 
+const execSnippet = (e)  => {
+  console.log(e)
+  modal.snippet = e.snippet
+
+  modal.executing = true
+
+  executeStinker(e.conn, e.snippet.code)
+      .then((res) => {
+        console.log(res, "d")
+
+        modal.output = res
+        modal.executing = false
+        modal.executeOpen = true
+      }).catch((err) => {
+        modal.output = err
+        modal.isError = true
+        modal.executing = false
+  })
+}
+
+const closeModal = () => {
+  modal.snippet = null
+  modal.executeOpen = false
+  modal.executing = false
+}
 
 </script>
 

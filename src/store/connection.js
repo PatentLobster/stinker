@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import {isDockerActive} from "../lib/helpers";
+
 export const connectionStore = defineStore("connection", {
         state: () => {
             return {
@@ -14,6 +16,18 @@ export const connectionStore = defineStore("connection", {
                     }
                 }
             }
+        },
+        getters: {
+          all(state) {
+
+              const cons = state.connections
+              for(const [key, value] of Object.entries(cons)) {
+                  if (value.type === "docker") {
+                      cons[key].online = isDockerActive(value.docker.id)
+                  }
+              }
+              return cons;
+          }
         },
         actions: {
             set_app_path(connection, string) {

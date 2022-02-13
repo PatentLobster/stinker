@@ -5,25 +5,25 @@
             <span class="sr-only">{{ item.name }}</span>
             <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
           </router-link>
-          <Menu as="div" class="relative z-20 text-left mx-auto mb-6 mt-auto bottom">
-            <MenuButton class="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600">
-              <span class="sr-only">Open user menu</span>
-              <img class="h-8 w-8 rounded-full" :src="user.imageUrl" alt="" />
-            </MenuButton>
+<!--          <Menu as="div" class="relative z-20 text-left mx-auto mb-6 mt-auto bottom">-->
+<!--            <MenuButton class="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600">-->
+<!--              <span class="sr-only">Open user menu</span>-->
+<!--              <img class="h-8 w-8 rounded-full" :src="user.imageUrl" alt="" />-->
+<!--            </MenuButton>-->
 
-            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
-              <MenuItems class="origin-bottom-right absolute z-30  mb-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <div class="py-1">
-                  <MenuItem v-slot="{ active }">
-                    <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"> Your Profile </a>
-                  </MenuItem>
-                  <MenuItem v-slot="{ active }">
-                    <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"> Sign Out </a>
-                  </MenuItem>
-                </div>
-              </MenuItems>
-            </transition>
-          </Menu>
+<!--            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">-->
+<!--              <MenuItems class="origin-bottom-right absolute z-30  mb-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">-->
+<!--                <div class="py-1">-->
+<!--                  <MenuItem v-slot="{ active }">-->
+<!--                    <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"> Your Profile </a>-->
+<!--                  </MenuItem>-->
+<!--                  <MenuItem v-slot="{ active }">-->
+<!--                    <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"> Sign Out </a>-->
+<!--                  </MenuItem>-->
+<!--                </div>-->
+<!--              </MenuItems>-->
+<!--            </transition>-->
+<!--          </Menu>-->
         </div>
       </nav>
 </template>
@@ -153,14 +153,9 @@ const user = {
     'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 
-const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
-]
 const sidebarNavigation = [
   { name: 'Home', href: '/', icon: InboxIcon },
-  { name: 'Settings', href: '/settings', icon: CogIcon },
+  // { name: 'Settings', href: '/settings', icon: CogIcon },
   { name: 'Snippets', href: '/snippets', icon: PencilAltIcon},
 ]
 </script>

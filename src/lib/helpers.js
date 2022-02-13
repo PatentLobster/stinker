@@ -104,3 +104,8 @@ export async function listDockerContainers() {
 
 	return entries;
 }
+
+export async function isDockerActive(id) {
+    const std = (await new shell.Command("docker", ['container', 'inspect', '-f', '{{.State.Running}}', id]).execute()).stdout
+    return (std && std === "true");
+}
