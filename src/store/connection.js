@@ -1,6 +1,4 @@
 import { defineStore } from 'pinia'
-import { whichPhp } from "../lib/helpers"
-import {open} from "@tauri-apps/api/dialog"
 export const connectionStore = defineStore("connection", {
         state: () => {
             return {

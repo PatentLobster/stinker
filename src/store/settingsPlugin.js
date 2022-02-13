@@ -10,7 +10,7 @@ export async function SettingsPlugin(context) {
     // Saves settings to file on actions starting with set&save
     context.store.$onAction(
         ({ name, store, after }) => {
-            if (name.includes("set") || name.includes("save")) {
+            if (name.includes("set_") || name.includes("save_")) {
                 after(async () => {
                     if (context.options.persisting) {
                         const settings = await readSettings()

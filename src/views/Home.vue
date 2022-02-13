@@ -1,7 +1,7 @@
 <template>
-  <div class="flex justify-center mx-auto flex-grow dark:bg-slate-900 dark:text-white">
+  <div class="flex h-full justify-center mx-auto flex-grow dark:bg-slate-900 dark:text-white">
 
-    <div class="flex h-screen flex-col ml-2 border-r pr-2  divide-y divide-dashed py-1 divide-gray-400 dark:divide-slate-300 dark:border-slate-400 shadow">
+    <div class="flex  flex-col ml-2 border-r pr-2  divide-y divide-dashed py-1 divide-gray-400 dark:divide-slate-300 dark:border-slate-400 shadow">
       <span class="my-2 mx-1"> Connections: </span>
       <div v-for="c in cStore.connections"
            class="py-2"
@@ -11,7 +11,7 @@
       </div>
 
     </div>
-      <div class="bg-white h-6/7 mb-3 overflow-scroll dark:bg-slate-800 dark:border-slate-700 border-solid border shadow sm:rounded-lg max-w-xl m-2 px-4 py-5 sm:p-6 mx-auto ">
+      <div class="container bg-white min-h-2/3 mb-3 overflow-scroll dark:bg-slate-800 dark:border-slate-700 border-solid border shadow sm:rounded-lg max-w-xl m-2 px-4 py-5 sm:p-6 mx-auto ">
         <h3 class="text-lg text-center leading-6 mx-auto font-medium dark:text-white text-gray-900">
           Create a new connection
         </h3>

@@ -73,7 +73,7 @@
                 <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900 dark:text-slate-100"> Save snippet </DialogTitle>
                 <div class="mt-2">
                   <p class="text-sm text-gray-500 dark:text-slate-200">Name this stinky code.</p>
-                  <TextInput labelText="Name" placeholder="Stinky-node" id="name"/>
+                  <TextInput v-model="sess.title" labelText="Name" placeholder="Stinky-node" id="name"/>
                 </div>
               </div>
             </div>
@@ -81,7 +81,7 @@
               <button
                   type="button"
                   class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
-                  @click="open = false"
+                  @click="saveSnippet"
               >
                 Save
               </button>
@@ -113,11 +113,12 @@ import { useRoute } from 'vue-router'
 import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { CheckIcon } from '@heroicons/vue/outline'
 import TextInput from "../components/TextInput.vue";
+import {useStore} from "../store/snippets";
 
 
 const route = useRoute()
 const cStore = connectionStore()
-
+const sStore = useStore()
 
 const open = ref(false)
 const ide = ref(null)
@@ -126,14 +127,15 @@ const sess = reactive(
       code: "",
       connection: null,
       output: null,
-      executing: false
+      executing: false,
+      title: ""
     }
 );
 
 onMounted(() => {
   console.log("mounted")
   console.log(route.params.id)
-  document.addEventListener("keydown", doSave);
+  document.addEventListener("keydown", listenS);
   if (route.params.id) {
     sess.connection = cStore.connections[route.params.id]
   } else {
@@ -142,16 +144,24 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  document.removeEventListener("keydown", doSave);
+  document.removeEventListener("keydown", listenS);
 })
 
-const doSave = (e) => {
-  if (!((e.keyCode === 83 && e.ctrlKey )|| (e.keyCode === 83 && e.metaKey ) )) {
-        return;
-      }
+const saveSnippet = async () => {
+  await sStore.add(sess.code, sess.title)
+  open.value = false
+}
 
-      e.preventDefault();
-      open.value = true
+const listenS = (e) => {
+  if (!((e.keyCode === 83 && e.ctrlKey )|| (e.keyCode === 83 && e.metaKey ) )) {
+  document.addEventListener("keydown", listenS);
+    return;
+  }
+
+  e.preventDefault();
+  open.value = true
+  document.addEventListener("keydown", listenS);
+
 }
 const handleChange = () => {
   sess.code = ide._value.editor.getModel().getValue();

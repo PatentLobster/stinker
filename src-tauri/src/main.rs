@@ -9,7 +9,6 @@ use tauri_plugin_sql::{Migration, MigrationKind, TauriSql};
 
 fn main() {
   let ctx = tauri::generate_context!();
-  println!("format {:?}", db::get_db_path(&ctx));
   let about_menu = Submenu::new("App", Menu::new()
       .add_native_item(MenuItem::Hide)
       .add_native_item(MenuItem::HideOthers)
