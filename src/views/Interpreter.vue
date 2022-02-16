@@ -23,7 +23,6 @@
       <span class="ml-0">
         {{sess?.connection?.type}}
       </span>
-
       <div class="flex justify-center items-center ml-auto  ">
         <div
             v-if="sess?.executing"
@@ -34,12 +33,22 @@
         {{sess?.connection?.name }}
 
       </span>
+
       <span class="flex h-3 w-3 my-auto ml-2 mr-auto ">
           <span
               v-if="sess?.executing"
               class="animate-ping h-3 w-3 absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
           <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
       </span>
+      <QueryLog class="mr-4 ml-4" v-if="sess.log_db" :queries="sess.queries"/>
+      <SwitchGroup as="div" class="flex items-center mr-4">
+        <Switch v-model="sess.log_db" :class="[sess.log_db ? 'bg-indigo-600' : 'bg-gray-200', 'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500']">
+          <span aria-hidden="true" :class="[sess.log_db ? 'translate-x-5' : 'translate-x-0', 'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200']" />
+        </Switch>
+        <SwitchLabel as="span" class="ml-3">
+          <span class="text-sm font-medium text-gray-900 dark:text-slate-200">log queries</span>
+        </SwitchLabel>
+      </SwitchGroup>
       <span
           @click="runStinker"
           class="rounded-md mr-4 z-10 px-2 bg-blue-500">
@@ -54,7 +63,8 @@
     </footer>
   </div>
 
-  <TransitionRoot as="template" :show="open">
+
+  <TransitionRoot as="template" v-on:keydown.enter="saveSnippet" :show="open">
     <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto" @close="open = false">
       <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
@@ -110,10 +120,11 @@ import {reactive, ref, onMounted, onUnmounted} from "vue";
 import {connectionStore} from "../store/connection"
 import {executeStinker} from "../services/stinker"
 import { useRoute } from 'vue-router'
-import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot, Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
 import { CheckIcon } from '@heroicons/vue/outline'
 import TextInput from "../components/TextInput.vue";
 import {useStore} from "../store/snippets";
+import QueryLog from "../components/QueryLog.vue";
 
 
 const route = useRoute()
@@ -128,7 +139,9 @@ const sess = reactive(
       connection: null,
       output: null,
       executing: false,
-      title: ""
+      title: "",
+      log_db: true,
+      queries: []
     }
 );
 
@@ -169,10 +182,17 @@ const handleChange = () => {
 
 const runStinker = () => {
   sess.executing = true
-  executeStinker(sess.connection, sess.code)
+  executeStinker(sess.connection, sess.code, sess.log_db)
       .then((res) => {
         console.log(res)
-        sess.output = res
+        if (sess.log_db === true) {
+          console.log(res)
+          res = JSON.parse(res)
+          sess.output = res.output
+          sess.queries = res.queries
+        } else {
+          sess.output = res
+        }
         sess.executing = false
       }).catch((err) => {
         sess.output = err

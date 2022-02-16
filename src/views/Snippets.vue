@@ -1,5 +1,28 @@
 <template>
-  <div class="flex flex-col my-2 py-2 justify-center w-full divide-y overflow-scroll">
+    <div
+        v-if="snip.snippets.length === 0"
+        class="flex justify-center w-full h-full justify-self-center "
+    >
+      <div
+          class="grid text-center my-auto mt-32 text-slate-900 justify-center px-32 py-8 bg-white shadow drop-shadow-md rounded-2xl border border-blue"
+      >
+        <h1
+            class="align-middle block my-2 text-lg font-bold"
+        >
+          Wow, such empty.
+        </h1>
+        <img src="../assets/doge.png"
+             alt="Doge"
+             class="block h-32 w-32 my-2 justify-self-center"
+        >
+        <p class="leading-1 mb-3">
+          Stinks, no snippets found.
+        </p>
+      </div>
+   </div>
+  <div
+      v-else
+      class="flex flex-col my-2 py-2 justify-center w-full divide-y overflow-scroll">
     <div
         v-for="snippet in snip.snippets"
         :key="snippet.id"
@@ -8,6 +31,8 @@
       <CodeBlock :snippet="snippet" @delete="openDeleteModal(snippet)" @execute="execSnippet"/>
     </div>
   </div>
+
+  <!--  Modals  -->
   <TransitionRoot as="template" :show="modal.deleteOpen">
     <Dialog as="div" class="fixed z-10 inset-0 overflow-y-auto" @close="modal.deleteOpen = false">
       <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -39,8 +64,7 @@
       </div>
     </Dialog>
   </TransitionRoot>
-
-    <CodeModal
+  <CodeModal
 
         :is-open="modal.executeOpen"
          :is-error="modal.isError"

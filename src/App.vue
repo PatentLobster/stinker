@@ -1,31 +1,3 @@
-<!--<script setup>-->
-<!--// This starter template is using Vue 3 <script setup> SFCs-->
-<!--// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup-->
-<!--import Navbar from "./components/Navbar.vue";-->
-
-<!--</script>-->
-
-<!--<template>-->
-<!--  <Navbar/>-->
-<!--  <router-view class=""/>-->
-
-<!--</template>-->
-<!--
-  This example requires Tailwind CSS v2.0+
-
-  This example requires some changes to your config:
-
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
--->
 <template>
   <div class="h-full flex flex-col">
     <!-- Top nav-->
@@ -33,7 +5,7 @@
       <!-- Logo area -->
       <div class="absolute inset-y-0 left-0 static flex-shrink-0 shadow-lg">
         <a href="#" class="flex items-center justify-center h-16 w-16 bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-600 w-20">
-          <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark.svg?color=white" alt="Workflow" />
+          <h1 class="font-gochi my-auto mx-auto font-bold text-6xl ">z</h1>
         </a>
       </div>
 

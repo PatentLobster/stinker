@@ -46,6 +46,7 @@
           <button
               type="button"
               value="ssh"
+              disabled
               @click="formInput.type = 'ssh'"
               class="-ml-px relative inline-flex items-center px-4 py-2 rounded-r-md border focus:z-10 focus:outline-none focus:ring-1 text-sm font-medium
                border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500
@@ -62,7 +63,7 @@
 
         <TextInput v-model="formInput.phpPath" labelText="PHP Path" :placeholder="formInput.type === 'local' ? 'Click the button to autodetect' : 'No autodetect for you, go type 🙃'" id="phpPath" :button="formInput.type === 'local' ? 'php' : ''"/>
 
-        <TextInput v-model="formInput.stinkerPhar" labelText="Stinker path" placeholder="path to Stinker.phar" id="stinkerPhar" :directory="false" :button="formInput.type === 'local' ? 'file' : ''"/>
+        <TextInput v-model="formInput.stinkerPhar" labelText="Stinker path" placeholder="path to Stinker.phar" id="stinkerPhar" :directory="false" button="file"/>
         <div
             class="border border-gray-300 rounded-md px-3 py-2 shadow-sm focus-within:ring-1 flex focus-within:ring-indigo-600 focus-within:border-indigo-600 m-2 dark:border-slate-500 dark:focus-within:ring-slate-400 dark:focus-within:border-slate-400">
           <label class="block text-sm my-auto font-medium text-gray-900 mr-auto dark:bg-slate-800 dark:text-gray-300">
@@ -189,8 +190,7 @@ const connection = ref("default")
 const data = reactive({
   dockers: null,
   envOptions: [
-          {id: 0, type: "local", name: "select a docker", online: false},
-
+          {id: 0, type: "local", name: "Select a container", online: false},
   ]
 })
 const selected = ref(data.envOptions[0])

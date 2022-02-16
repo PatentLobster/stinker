@@ -16,7 +16,7 @@
 
       <transition leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100" leave-to-class="opacity-0">
         <ListboxOptions class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-          <ListboxOption as="template" v-for="connection in s.connections" :key="connection.name" :value="connection" v-slot="{ active, selected }">
+          <ListboxOption as="template" v-for="connection in s.all" :key="connection.name" :value="connection" v-slot="{ active, selected }">
             <li :class="[active ? 'text-white bg-indigo-600' : 'text-gray-900', 'cursor-default select-none relative py-2 pl-3 pr-9']">
               <div class="flex items-center">
                 <span :class="[connection.online ? 'bg-green-400' : 'bg-gray-200', 'flex-shrink-0 inline-block h-2 w-2 rounded-full']" aria-hidden="true" />

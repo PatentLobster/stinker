@@ -19,11 +19,17 @@ export const connectionStore = defineStore("connection", {
         },
         getters: {
           all(state) {
-
               const cons = state.connections
-              for(const [key, value] of Object.entries(cons)) {
-                  if (value.type === "docker") {
-                      cons[key].online = isDockerActive(value.docker.id)
+              for(let [key, value] of Object.entries(cons)) {
+                  switch (value.type) {
+                      case "docker":
+                        cons[key].online = isDockerActive(value.docker.id)
+                        break
+                      case "ssh":
+                          cons[key].online = false  // Todo
+                          break
+                      default:
+                          cons[key].online = true
                   }
               }
               return cons;
