@@ -159,7 +159,7 @@ import {listDockerContainers} from "../lib/helpers"
 import { Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } from '@headlessui/vue'
 import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
 import TextInput from "../components/TextInput.vue"
-
+import {resourceDir} from "@tauri-apps/api/path"
 import {connectionStore} from "../store/connection"
 const cStore = connectionStore()
 const router = useRouter()
@@ -215,6 +215,9 @@ const dockerPs = () => {
 
 onMounted(() => {
   dockerPs()
+  resourceDir().then(e => {
+    formInput.stinkerPhar = e + "resources/Stinker.phar"
+  })
 })
 
 const setConnection = (e) => {

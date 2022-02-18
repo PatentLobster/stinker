@@ -21,7 +21,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "resources": [],
+      "resources": ["resources/Stinker.phar"],
       "externalBin": [],
       "copyright": "",
       "category": "DeveloperTool",

@@ -73,7 +73,7 @@ export async function executeCommand(comm, connection) {
             args = [connection.phpPath, [connection.appPath + "/artisan", ...comm]]
             break
         case "docker":
-            args = ["docker", ['exec', '-i', connection.docker.id, "sh", "-c", `'${connection.phpPath} ${connection.appPath + "/artisan"} ${comm.join(" ")}'`]]
+            args = ["docker", ['exec', '-i', connection.docker.id, "sh", "-c", `${connection.phpPath} ${connection.appPath + "/artisan"} ${comm.join(" ")}`]]
     }
     const c = await new shell.Command(...args).execute()
     if (c.stdout) {
