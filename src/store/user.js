@@ -15,9 +15,7 @@ export const userStore = defineStore('user', {
     },
     actions: {
         async set_git_user() {
-            console.log("ded")
             const user = await readGitUser()
-            console.log(user)
             this.name  = user.name
             this.email = user.email
         }

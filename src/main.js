@@ -16,13 +16,16 @@ import Home from "./views/Home.vue"
 import Settings from "./views/Settings.vue";
 import Interpreter from "./views/Interpreter.vue";
 import Snippets from "./views/Snippets.vue";
+import Commands from "./views/Commands.vue"
 
 const routes = [
     {path: "/", component: Home, name: "Home"},
     {path: "/settings", component: Settings, name: "Settings"},
     {path: "/snippets", component: Snippets, name: "Snippets"},
-    {path: "/interpreter", component: Interpreter, name: "Interpreter"},
-    {path: "/interpreter/:id", component: Interpreter, name: ""}
+    {path: "/interpreter", component: Interpreter, name: "Interpreter "},
+    {path: "/commands", component: Commands, name: "Commands "},
+    {path: "/interpreter/:id", component: Interpreter, name: "Interpreter"},
+    {path: "/commands/:id", component: Commands, name: "Commands"}
 ]
 
 const router = createRouter({

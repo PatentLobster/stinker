@@ -30,12 +30,16 @@
                 <!-- Main -->
                 <div class="text-slate-900 flex flex-col divide-y mb-3">
 
-                  <div
-                      v-for="query in queries"
-                      :key="query"
-                      class="mx-auto px-2 shadow-lg"
+                  <div class="flow-root">
+                    <ul role="list" class="-mb-8">
+                  <li
+                      v-for="(query, i) in queries"
+                      :key="i"
+                      class="relative pb-8"
                   >
-                      <div class="text-slate-400 flex">
+                    <span v-if="i !== queries.length - 1" class="absolute top-4  -ml-px h-full w-0.5 bg-gray-400" aria-hidden="true" />
+                    <div class="shadow-lg my-2 px-4 ">
+                    <div class="text-slate-400 flex">
                         <span  class="mr-auto">Duration: {{query.time}}s </span>
                         <Popover class="relative">
                           <PopoverButton
@@ -52,9 +56,11 @@
 
                       </div>
                     <SqlBlock :code="query.query"/>
-
                   </div>
+                  </li>
+                    </ul>
 
+                    </div>
                 </div>
               </div>
             </div>

@@ -208,7 +208,6 @@ watchEffect(() => {
 const dockerPs = () => {
   listDockerContainers().then(e => {
     for (const docker of e ) {
-      console.log(docker)
       data.envOptions.push({ id: docker["CONTAINER ID"], type: "docker", name: docker["NAMES"], online: true })
     }
   })

@@ -48,3 +48,39 @@ export async function executeStinker(connection, code, log_query = false) {
             console.log(connection)
     }
 }
+
+export async function getCommands(connection) {
+    let args
+    switch (connection?.type) {
+        case "local":
+            args = [connection.phpPath, [connection.appPath + "/artisan", '--format=json']]
+            break;
+        case "docker":
+            args = ["docker", ['exec', '-i', connection.docker.id, "sh", "-c", `${connection.phpPath} ${connection.appPath + "/artisan"} --format=json`]]
+            break;
+        default:
+            return
+    }
+
+    let stdout =  JSON.parse((await new shell.Command(...args).execute()).stdout)
+    return stdout.commands
+}
+
+export async function executeCommand(comm, connection) {
+    let args
+    switch (connection?.type) {
+        case "local":
+            args = [connection.phpPath, [connection.appPath + "/artisan", ...comm]]
+            break
+        case "docker":
+            args = ["docker", ['exec', '-i', connection.docker.id, "sh", "-c", `'${connection.phpPath} ${connection.appPath + "/artisan"} ${comm.join(" ")}'`]]
+    }
+    const c = await new shell.Command(...args).execute()
+    if (c.stdout) {
+        return {output: c.stdout, error: (c.code !== 0)}
+    }
+    if (c.stderr) {
+        return {output: c.stderr, error: true}
+    }
+
+}
