@@ -33,4 +33,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: mac-dmg
-        path: src-tauri/target/release/dmg/*.dmg
+        path: src-tauri/target/release/bundle/dmg/*.dmg
