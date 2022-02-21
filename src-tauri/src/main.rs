@@ -45,19 +45,6 @@ fn main() {
   tauri::Builder::default()
       .invoke_handler(tauri::generate_handler![])
       .menu(menu)
-      .on_menu_event(|event| {
-        let event_name = event.menu_item_id();
-        match event_name {
-          "Learn More" => {
-            shell::open(
-              "https://www.my-app.com".to_string(),
-              None,
-            )
-                .unwrap();
-          }
-          _ => {}
-        }
-      })
       .plugin(TauriSql::default().add_migrations(
       "sqlite:test.db",
       vec![Migration {
