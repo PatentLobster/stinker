@@ -1,7 +1,13 @@
-# Stinker
-Laravel tinker snippet app.
+<div align="center" width="100%">
+    <img width="15%" src="https://github.com/PatentLobster/stinker/raw/master/public/icon.png"> 
+</div>
 
-![screenshot](.github/images/screenshot.png?raw=true "Screenshot")
+<h1 align="center"> Stinker. </h1>
+<h3 align="center">Laravel tinker snippet app. </h3>
+<br/>
+<div align="center" width="100%">
+    <img width="50%" src=".github/images/screenshot.png?raw=true" /> 
+</div>
 
 
 ## Project setup
